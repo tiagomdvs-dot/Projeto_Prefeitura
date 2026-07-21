@@ -3,19 +3,20 @@
 {% block css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/notificacoes.css') }}">{% endblock %}
 {% block conteudo %}
 <div class="notificacoes-container">
+    <a href="{{ url_for('ocorrencias.listar_ocorrencias') }}" class="btn-voltar">&#8592; Voltar às ocorrências</a>
     <h1>Notificações</h1>
     {% if notificacoes %}
         <div class="notificacoes-lista">
             {% for notificacao in notificacoes %}
-                <div class="notificacao-card {% if not notificacao.lida %}nao-lida{% endif %}">
+                <a href="{{ url_for('ocorrencias.detalhe_ocorrencia', ocorrencia_id=notificacao.ocorrencia_id) if notificacao.ocorrencia_id else '#' }}" class="notificacao-card {% if not notificacao.lida %}nao-lida{% endif %}">
                     <div class="notificacao-conteudo">
                         <p>{{ notificacao.mensagem }}</p>
                         <small>{{ notificacao.data_hora.strftime('%d/%m/%Y %H:%M') }}</small>
                     </div>
                     {% if not notificacao.lida %}
-                        <a href="{{ url_for('notificacoes.marcar_lida', notificacao_id=notificacao.id) }}" class="btn-marcar-lida">Marcar como lida</a>
+                        <span class="btn-marcar-lida" onclick="event.stopPropagation(); window.location='{{ url_for('notificacoes.marcar_lida', notificacao_id=notificacao.id) }}'">Marcar como lida</span>
                     {% endif %}
-                </div>
+                </a>
             {% endfor %}
         </div>
     {% else %}

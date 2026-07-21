@@ -64,6 +64,24 @@
     background: #eff6ff;
 }
 
+.btn-voltar {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--cor-secundaria);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-bottom: 16px;
+    padding: 8px 0;
+    transition: var(--transicao);
+}
+
+.btn-voltar:hover {
+    color: var(--cor-primaria);
+    gap: 10px;
+}
+
 @media (max-width: 768px) {
     .notificacao-card {
         flex-direction: column;

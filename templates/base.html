@@ -17,11 +17,12 @@
                     <small>Secretaria de Infraestrutura e Mobilidade Urbana</small>
                 </div>
             </a>
-            <nav class="nav-cabecalho">
+                <nav class="nav-cabecalho">
                 {% if current_user.is_authenticated %}
                     {% if current_user.setor is defined and current_user.setor %}
                         <span class="nav-usuario">{{ current_user.nome_completo }} - {{ current_user.setor }}</span>
                     {% else %}
+                        <a href="{{ url_for('ocorrencias.listar_ocorrencias') }}" class="nav-link">Minhas ocorrências</a>
                         <a href="{{ url_for('notificacoes.listar_notificacoes') }}" class="nav-link">Notificações</a>
                     {% endif %}
                     <a href="{{ url_for('auth.logout') }}" class="btn btn-sair">Sair</a>

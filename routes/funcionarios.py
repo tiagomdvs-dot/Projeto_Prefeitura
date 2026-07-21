@@ -51,10 +51,12 @@ def atender_ocorrencia(ocorrencia_id):
                 ocorrencia.data_conclusao = datetime.utcnow()
 
         if notificar and ocorrencia.cidadao_id:
+            status_label = {'aberta': 'Aberta', 'em_andamento': 'Em andamento', 'concluida': 'Concluída'}
+            label = status_label.get(novo_status, ocorrencia.status)
             notificacao = Notificacao(
                 cidadao_id=ocorrencia.cidadao_id,
                 ocorrencia_id=ocorrencia.id,
-                mensagem=f'{ocorrencia.protocolo} - {observacao[:100]}'
+                mensagem=f'{ocorrencia.protocolo} - Status: {label}. {observacao[:200]}'
             )
             db.session.add(notificacao)
 
