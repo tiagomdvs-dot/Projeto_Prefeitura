@@ -3,9 +3,23 @@ from io import StringIO
 from flask import Blueprint, render_template, request, redirect, url_for, flash, Response
 from flask_login import login_required, current_user
 from werkzeug.security import generate_password_hash
-from models import db, Funcionario, Ocorrencia
+from models import db, Funcionario, Ocorrencia, AtualizacaoOcorrencia, Avaliacao
 from utils import validar_email_institucional, gerar_senha_temporaria
 from sqlalchemy import func, extract
+
+TIPO_SETOR_MAP = {
+    'Buraco em via': 'Infraestrutura',
+    'Coleta de resíduos': 'Limpeza Urbana',
+    'Iluminação pública': 'Iluminação Pública',
+    'Sinalização de trânsito': 'Trânsito',
+    'Limpeza urbana': 'Limpeza Urbana',
+    'Poda de árvores': 'Meio Ambiente',
+    'Calçamento': 'Infraestrutura',
+    'Esgoto a céu aberto': 'Infraestrutura',
+    'Outros': 'Infraestrutura',
+}
+
+SETORES = ['Infraestrutura', 'Limpeza Urbana', 'Iluminação Pública', 'Trânsito', 'Meio Ambiente']
 
 admin_bp = Blueprint('admin', __name__)
 
@@ -44,7 +58,31 @@ def painel_admin():
         )
     stats = stats_query.group_by(Ocorrencia.bairro, Ocorrencia.tipo).order_by(func.count(Ocorrencia.id).desc()).all()
 
-    return render_template('painel_admin.html', funcionarios=funcionarios, ocorrencias=ocorrencias, bairros=bairros, bairro_filtro=bairro_filtro, stats=stats, mes_filtro=mes_filtro)
+    setor_stats = []
+    for setor in SETORES:
+        tipos = [t for t, s in TIPO_SETOR_MAP.items() if s == setor]
+        q = Ocorrencia.query.filter(Ocorrencia.tipo.in_(tipos))
+        if mes_filtro:
+            ano, mes = mes_filtro.split('-')
+            q = q.filter(extract('year', Ocorrencia.data_abertura) == int(ano), extract('month', Ocorrencia.data_abertura) == int(mes))
+        total = q.count()
+        abertas = q.filter(Ocorrencia.status == 'aberta').count()
+        andamento = q.filter(Ocorrencia.status == 'em_andamento').count()
+        concluidas = q.filter(Ocorrencia.status == 'concluida').count()
+        ids = [r[0] for r in q.with_entities(Ocorrencia.id).all()]
+        atendidas = AtualizacaoOcorrencia.query.filter(AtualizacaoOcorrencia.ocorrencia_id.in_(ids)).distinct(AtualizacaoOcorrencia.ocorrencia_id).count() if ids else 0
+        media_nota = db.session.query(func.avg(Avaliacao.nota)).filter(Avaliacao.ocorrencia_id.in_(ids)).scalar() if ids else None
+        setor_stats.append({
+            'setor': setor,
+            'total': total,
+            'abertas': abertas,
+            'andamento': andamento,
+            'concluidas': concluidas,
+            'atendidas': atendidas,
+            'media_nota': round(media_nota, 1) if media_nota else None
+        })
+
+    return render_template('painel_admin.html', funcionarios=funcionarios, ocorrencias=ocorrencias, bairros=bairros, bairro_filtro=bairro_filtro, stats=stats, mes_filtro=mes_filtro, setor_stats=setor_stats)
 
 
 @admin_bp.route('/admin/funcionarios/cadastrar', methods=['POST'])

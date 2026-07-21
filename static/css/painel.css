@@ -1,5 +1,5 @@
 .painel-container {
-    max-width: 800px;
+    max-width: 960px;
     margin: 0 auto;
 }
 
@@ -204,6 +204,29 @@
 .busca-campo input:focus {
     border-color: var(--cor-secundaria);
     box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.status-aberta {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.status-andamento {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.status-concluida {
+    background: #d1fae5;
+    color: #065f46;
 }
 
 .btn-exportar {
