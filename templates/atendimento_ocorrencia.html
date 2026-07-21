@@ -20,9 +20,9 @@
             <h3>Descrição</h3>
             <p>{{ ocorrencia.descricao }}</p>
         </div>
-        {% if ocorrencia.foto_url %}
+        {% if ocorrencia.foto %}
             <div class="detalhe-foto">
-                <img src="{{ url_for('static', filename=ocorrencia.foto_url) }}" alt="Foto da ocorrência">
+                <img src="{{ ocorrencia.foto }}" alt="Foto da ocorrência">
             </div>
         {% endif %}
         <div class="atendimento-form">

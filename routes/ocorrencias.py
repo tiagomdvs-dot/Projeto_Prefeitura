@@ -1,8 +1,6 @@
-import os
-import uuid
-from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app
+import base64
+from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
-from werkzeug.utils import secure_filename
 from models import db, Ocorrencia, Notificacao
 from utils import gerar_protocolo
 
@@ -35,19 +33,20 @@ def nova_ocorrencia():
             flash('Preencha todos os campos obrigatórios', 'erro')
             return render_template('nova_ocorrencia.html', tipos=TIPOS_OCORRENCIA)
 
-        foto_url = None
+        foto_data = None
+        foto_mime = None
         if 'foto' in request.files:
             foto = request.files['foto']
             if foto and foto.filename:
-                ext = os.path.splitext(foto.filename)[1] or '.jpg'
-                nome_unico = f'{uuid.uuid4().hex}{ext}'
-                caminho = os.path.join(current_app.static_folder, 'uploads', nome_unico)
-                os.makedirs(os.path.dirname(caminho), exist_ok=True)
                 try:
-                    foto.save(caminho)
-                    foto_url = f'uploads/{nome_unico}'
+                    mime = foto.content_type or 'image/jpeg'
+                    dados = foto.read()
+                    if dados:
+                        encoded = base64.b64encode(dados).decode('utf-8')
+                        foto_data = f'data:{mime};base64,{encoded}'
+                        foto_mime = mime
                 except Exception as e:
-                    flash(f'Erro ao salvar foto: {str(e)}', 'erro')
+                    flash(f'Erro ao processar foto: {str(e)}', 'erro')
 
         protocolo = gerar_protocolo()
         ocorrencia = Ocorrencia(
@@ -57,7 +56,8 @@ def nova_ocorrencia():
             descricao=descricao,
             localizacao=localizacao,
             bairro=bairro,
-            foto_url=foto_url
+            foto=foto_data,
+            foto_mime=foto_mime
         )
         db.session.add(ocorrencia)
         db.session.commit()
