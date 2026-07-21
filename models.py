@@ -52,8 +52,8 @@ class Ocorrencia(db.Model):
     data_abertura = db.Column(db.DateTime, default=datetime.utcnow)
     data_conclusao = db.Column(db.DateTime, nullable=True)
 
-    atualizacoes = db.relationship('AtualizacaoOcorrencia', backref='ocorrencia', lazy=True)
-    avaliacao = db.relationship('Avaliacao', backref='ocorrencia', uselist=False, lazy=True)
+    atualizacoes = db.relationship('AtualizacaoOcorrencia', backref='ocorrencia', lazy=True, cascade='all, delete-orphan')
+    avaliacao = db.relationship('Avaliacao', backref='ocorrencia', uselist=False, lazy=True, cascade='all, delete-orphan')
 
 
 class AtualizacaoOcorrencia(db.Model):
