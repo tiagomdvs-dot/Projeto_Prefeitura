@@ -3,3 +3,5 @@ instance/
 *.db
 .env
 *.pyc
+stderr.txt
+stdout.txt
