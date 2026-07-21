@@ -55,6 +55,7 @@ NOTIFICAÇÕES (/notificacoes)
 
 PAINEL FUNCIONÁRIO (/funcionario/painel)
   - Filtra ocorrências do setor do funcionário logado
+  - Campo de busca por número de protocolo
   - Cada card leva ao atendimento da ocorrência
 
 ATENDIMENTO (/funcionario/ocorrencias/<id>/atender)
@@ -66,6 +67,37 @@ PAINEL ADMIN (/admin/painel)
   - Cadastro, edição e exclusão de funcionários
   - Resumo de ocorrências por bairro (com filtro mensal)
   - Mostra tipos de ocorrência e total por bairro (do maior para o menor)
+  - Botão "Exportar CSV" para baixar relatório de ocorrências
+
+4. MAPEAMENTO TIPO DE OCORRÊNCIA → SETOR
+-----------------------------------------
+| Tipo de Ocorrência       | Departamento Responsável |
+|--------------------------|--------------------------|
+| Buraco em via            | Infraestrutura           |
+| Coleta de resíduos       | Limpeza Urbana           |
+| Iluminação pública       | Iluminação Pública       |
+| Sinalização de trânsito  | Trânsito                 |
+| Limpeza urbana           | Limpeza Urbana           |
+| Poda de árvores          | Meio Ambiente            |
+| Calçamento               | Infraestrutura           |
+| Esgoto a céu aberto      | Infraestrutura           |
+| Outros                   | Infraestrutura           |
+
+5. FUNCIONALIDADES IMPLEMENTADAS
+---------------------------------
+- Autenticação separada (cidadão e institucional)
+- Cadastro de cidadão com validação de CPF
+- Abertura de ocorrência com foto (base64), bairro e anonimato
+- Geração automática de protocolo (PROC-ANO-NUM)
+- Acompanhamento de ocorrências pelo cidadão
+- Notificações in-app ao cidadão sobre atualizações
+- Avaliação por estrelas (1 a 5) em ocorrências concluídas
+- Painel do funcionário filtrado por setor + busca por protocolo
+- Atendimento com observação, alteração de status e exclusão com motivo
+- Painel administrativo com CRUD de funcionários
+- Resumo de ocorrências por bairro com filtro mensal
+- Exportação de relatório CSV
+- Cabeçalho e rodapé dinâmicos conforme setor do funcionário
 
 TECNOLOGIAS
 -----------
@@ -75,8 +107,4 @@ TECNOLOGIAS
 - Flask-Login (autenticação)
 - HTML5 + CSS3 + JavaScript puro (frontend)
 - Git + GitHub (versionamento)
-- Vercel (deploy)</think>
-
-<｜DSML｜tool_calls>
-<｜DSML｜invoke name="write">
-<｜DSML｜parameter name="filePath" string="true">C:\Users\thyag\OneDrive\Desktop\israel\roteiro.txt
+- Vercel (deploy)
