@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
-from models import db, Ocorrencia, AtualizacaoOcorrencia, Notificacao
+from models import db, Ocorrencia, AtualizacaoOcorrencia, Avaliacao, Notificacao
 from datetime import datetime
 
 funcionarios_bp = Blueprint('funcionarios', __name__)
@@ -84,6 +84,9 @@ def excluir_ocorrencia(ocorrencia_id):
         )
         db.session.add(notificacao)
 
+    AtualizacaoOcorrencia.query.filter_by(ocorrencia_id=ocorrencia.id).delete()
+    Avaliacao.query.filter_by(ocorrencia_id=ocorrencia.id).delete()
+    Notificacao.query.filter_by(ocorrencia_id=ocorrencia.id).delete()
     db.session.delete(ocorrencia)
     db.session.commit()
     flash(f'Ocorrência {ocorrencia.protocolo} excluída com sucesso!', 'sucesso')
