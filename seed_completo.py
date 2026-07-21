@@ -60,7 +60,8 @@ def seed():
             cidadao_id=1,
             tipo='Buraco em via',
             descricao='Buraco grande na Rua das Flores, próximo ao número 150.',
-            localizacao='Rua das Flores, 150, Centro',
+            localizacao='Rua das Flores, 150',
+            bairro='Centro',
             status='aberta'
         )
         db.session.add(ocorrencia1)
@@ -70,7 +71,8 @@ def seed():
             cidadao_id=1,
             tipo='Coleta de resíduos',
             descricao='Coleta de resíduos não passou na Rua dos Ipês há 3 dias.',
-            localizacao='Rua dos Ipês, 200, Jardim América',
+            localizacao='Rua dos Ipês, 200',
+            bairro='Jardim América',
             status='em_andamento'
         )
         db.session.add(ocorrencia2)
@@ -80,7 +82,8 @@ def seed():
             cidadao_id=2,
             tipo='Iluminação pública',
             descricao='Poste com lâmpada queimada na Praça Central.',
-            localizacao='Praça Central, s/n, Centro',
+            localizacao='Praça Central, s/n',
+            bairro='Centro',
             status='concluida',
             data_conclusao=datetime.utcnow()
         )

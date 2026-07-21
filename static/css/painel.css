@@ -167,6 +167,14 @@
     overflow-x: auto;
 }
 
+.form-filtro {
+    margin-bottom: 16px;
+}
+
+.form-filtro .campo {
+    max-width: 300px;
+}
+
 .tabela {
     width: 100%;
     border-collapse: separate;

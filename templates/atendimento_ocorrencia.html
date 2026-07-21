@@ -12,6 +12,7 @@
         <div class="detalhe-info">
             <p><strong>Tipo:</strong> {{ ocorrencia.tipo }}</p>
             <p><strong>Local:</strong> {{ ocorrencia.localizacao }}</p>
+            <p><strong>Bairro:</strong> {{ ocorrencia.bairro }}</p>
             <p><strong>Cidadão:</strong> {{ ocorrencia.cidadao.nome_completo if ocorrencia.cidadao else 'Anônimo' }}</p>
             <p><strong>Data de abertura:</strong> {{ ocorrencia.data_abertura.strftime('%d/%m/%Y %H:%M') }}</p>
         </div>
@@ -92,7 +93,4 @@ document.getElementById('modal-exclusao').addEventListener('click', function(e) 
     if (e.target === this) fecharModalExclusao();
 });
 </script>
-        </div>
-    </div>
-</div>
 {% endblock %}

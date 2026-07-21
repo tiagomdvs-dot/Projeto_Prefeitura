@@ -12,6 +12,7 @@
         <div class="detalhe-info">
             <p><strong>Tipo:</strong> {{ ocorrencia.tipo }}</p>
             <p><strong>Local:</strong> {{ ocorrencia.localizacao }}</p>
+            <p><strong>Bairro:</strong> {{ ocorrencia.bairro }}</p>
             <p><strong>Data de abertura:</strong> {{ ocorrencia.data_abertura.strftime('%d/%m/%Y %H:%M') }}</p>
             {% if ocorrencia.data_conclusao %}
                 <p><strong>Concluído em:</strong> {{ ocorrencia.data_conclusao.strftime('%d/%m/%Y %H:%M') }}</p>

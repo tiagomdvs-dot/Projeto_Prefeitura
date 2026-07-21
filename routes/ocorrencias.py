@@ -28,9 +28,10 @@ def nova_ocorrencia():
         tipo = request.form.get('tipo', '').strip()
         descricao = request.form.get('descricao', '').strip()
         localizacao = request.form.get('localizacao', '').strip()
+        bairro = request.form.get('bairro', '').strip()
         anonimo = request.form.get('anonimo') == 'sim'
 
-        if not all([tipo, descricao, localizacao]):
+        if not all([tipo, descricao, localizacao, bairro]):
             flash('Preencha todos os campos obrigatórios', 'erro')
             return render_template('nova_ocorrencia.html', tipos=TIPOS_OCORRENCIA)
 
@@ -56,6 +57,7 @@ def nova_ocorrencia():
             tipo=tipo,
             descricao=descricao,
             localizacao=localizacao,
+            bairro=bairro,
             foto_url=foto_url
         )
         db.session.add(ocorrencia)

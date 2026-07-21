@@ -45,6 +45,7 @@ class Ocorrencia(db.Model):
     tipo = db.Column(db.String(100), nullable=False)
     descricao = db.Column(db.Text, nullable=False)
     localizacao = db.Column(db.String(255), nullable=False)
+    bairro = db.Column(db.String(100), nullable=False, default='Centro')
     foto_url = db.Column(db.String(500), nullable=True)
     status = db.Column(db.String(20), default='aberta')
     data_abertura = db.Column(db.DateTime, default=datetime.utcnow)

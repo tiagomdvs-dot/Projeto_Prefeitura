@@ -68,6 +68,47 @@
             {% else %}
                 <p>Nenhum funcionário cadastrado.</p>
             {% endif %}
+        <div class="funcionarios-lista">
+            <h3>Ocorrências por Bairro</h3>
+            <form method="GET" action="{{ url_for('admin.painel_admin') }}" class="form form-filtro">
+                <div class="campo">
+                    <label for="bairro">FILTRAR POR BAIRRO</label>
+                    <select id="bairro" name="bairro" onchange="this.form.submit()">
+                        <option value="">Todos os bairros</option>
+                        {% for b in bairros %}
+                            <option value="{{ b }}" {% if b == bairro_filtro %}selected{% endif %}>{{ b }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </form>
+            {% if ocorrencias %}
+                <div class="tabela-wrapper">
+                    <table class="tabela">
+                        <thead>
+                            <tr>
+                                <th>Protocolo</th>
+                                <th>Tipo</th>
+                                <th>Bairro</th>
+                                <th>Status</th>
+                                <th>Data</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for occ in ocorrencias %}
+                                <tr>
+                                    <td><strong>{{ occ.protocolo }}</strong></td>
+                                    <td>{{ occ.tipo }}</td>
+                                    <td>{{ occ.bairro }}</td>
+                                    <td><span class="status status-{{ occ.status }}">{{ occ.status|replace('_', ' ')|title }}</span></td>
+                                    <td>{{ occ.data_abertura.strftime('%d/%m/%Y') }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p>Nenhuma ocorrência encontrada.</p>
+            {% endif %}
         </div>
     </div>
 </div>

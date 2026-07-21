@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
 from werkzeug.security import generate_password_hash
-from models import db, Funcionario
+from models import db, Funcionario, Ocorrencia
 from utils import validar_email_institucional, gerar_senha_temporaria
 
 admin_bp = Blueprint('admin', __name__)
@@ -13,7 +13,14 @@ def painel_admin():
     if not hasattr(current_user, 'setor') or current_user.setor != 'Administrador':
         return redirect(url_for('auth.login_institucional'))
     funcionarios = Funcionario.query.all()
-    return render_template('painel_admin.html', funcionarios=funcionarios)
+    bairro_filtro = request.args.get('bairro', '').strip()
+    ocorrencias_query = Ocorrencia.query
+    if bairro_filtro:
+        ocorrencias_query = ocorrencias_query.filter(Ocorrencia.bairro.ilike(f'%{bairro_filtro}%'))
+    ocorrencias = ocorrencias_query.order_by(Ocorrencia.data_abertura.desc()).all()
+    bairros = db.session.query(Ocorrencia.bairro).distinct().order_by(Ocorrencia.bairro).all()
+    bairros = [b[0] for b in bairros]
+    return render_template('painel_admin.html', funcionarios=funcionarios, ocorrencias=ocorrencias, bairros=bairros, bairro_filtro=bairro_filtro)
 
 
 @admin_bp.route('/admin/funcionarios/cadastrar', methods=['POST'])
