@@ -99,12 +99,4 @@ PAINEL ADMIN (/admin/painel)
 - Exportação de relatório CSV
 - Cabeçalho e rodapé dinâmicos conforme setor do funcionário
 
-TECNOLOGIAS
------------
-- Python 3 + Flask (backend)
-- PostgreSQL / NeonDB (banco de dados)
-- SQLAlchemy (ORM)
-- Flask-Login (autenticação)
-- HTML5 + CSS3 + JavaScript puro (frontend)
-- Git + GitHub (versionamento)
-- Vercel (deploy)
+
