@@ -5,7 +5,10 @@ import os
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'chave-super-secreta-prefeitura-2026')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///prefeitura.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
+    'DATABASE_URL',
+    'postgresql://neondb_owner:npg_9Am8zyepVdnZ@ep-young-sun-avmnkg2p-pooler.c-11.us-east-1.aws.neon.tech/neondb?channel_binding=require&sslmode=require'
+)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_FOLDER'] = os.path.join('static', 'uploads')
 app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024
