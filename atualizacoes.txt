@@ -28,4 +28,19 @@ Implementações realizadas:
 - Código duplicado do mapeamento em routes/ocorrencias.py e routes/funcionarios.py
 - Commit: 0a11ecb
 
-21/07/2026 - Redeploy for version sync
+21/07/2026 - Busca por protocolo no painel do funcionário + Exportação CSV
+
+Implementações realizadas:
+- Campo de busca no painel do funcionário filtrando apenas por número de protocolo
+- Rota /admin/exportar/csv com filtro mensal para download de relatório CSV
+- Botão "Exportar CSV" no painel admin
+- Commits: 0c6d2d1, 1f22810
+
+21/07/2026 - Resumo por Setor no painel administrativo
+
+Implementações realizadas:
+- Nova seção "Resumo por Setor" no admin com tabela de desempenho
+- Para cada setor: total, abertas, em andamento, concluídas, atendidas e média de avaliação
+- Badges coloridos para status (amarelo=aberta, azul=andamento, verde=concluída)
+- Largura do painel aumentada para 960px
+- Commits: dc54280, 7e18c3b, 969883d
