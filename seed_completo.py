@@ -37,7 +37,34 @@ def seed():
         )
         db.session.add(func2)
 
-        cidadao1 = Cidadao(
+        func3 = Funcionario(
+            nome_completo='Pedro Alves',
+            email_institucional='pedro.alves@picos.pi.gov.br',
+            senha_hash=generate_password_hash('func123'),
+            setor='Iluminação Pública',
+            ativo=True
+        )
+        db.session.add(func3)
+
+        func4 = Funcionario(
+            nome_completo='Clara Mendes',
+            email_institucional='clara.mendes@picos.pi.gov.br',
+            senha_hash=generate_password_hash('func123'),
+            setor='Trânsito',
+            ativo=True
+        )
+        db.session.add(func4)
+
+        func5 = Funcionario(
+            nome_completo='Rafael Torres',
+            email_institucional='rafael.torres@picos.pi.gov.br',
+            senha_hash=generate_password_hash('func123'),
+            setor='Meio Ambiente',
+            ativo=True
+        )
+        db.session.add(func5)
+
+        cidadao1 = Cidadao( = Cidadao(
             nome_completo='Carlos Silva',
             cpf='123.456.789-09',
             email='carlos@email.com',
@@ -124,6 +151,9 @@ def seed():
         print('  admin@picos.pi.gov.br / admin123 (Administrador)')
         print('  jonas.leal@picos.pi.gov.br / func123 (Infraestrutura)')
         print('  maria.santos@picos.pi.gov.br / func123 (Limpeza Urbana)')
+        print('  pedro.alves@picos.pi.gov.br / func123 (Iluminação Pública)')
+        print('  clara.mendes@picos.pi.gov.br / func123 (Trânsito)')
+        print('  rafael.torres@picos.pi.gov.br / func123 (Meio Ambiente)')
 
 
 if __name__ == '__main__':
