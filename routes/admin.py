@@ -3,6 +3,7 @@ from flask_login import login_required, current_user
 from werkzeug.security import generate_password_hash
 from models import db, Funcionario, Ocorrencia
 from utils import validar_email_institucional, gerar_senha_temporaria
+from sqlalchemy import func, extract
 
 admin_bp = Blueprint('admin', __name__)
 
@@ -14,13 +15,34 @@ def painel_admin():
         return redirect(url_for('auth.login_institucional'))
     funcionarios = Funcionario.query.all()
     bairro_filtro = request.args.get('bairro', '').strip()
+    mes_filtro = request.args.get('mes', '')
     ocorrencias_query = Ocorrencia.query
     if bairro_filtro:
         ocorrencias_query = ocorrencias_query.filter(Ocorrencia.bairro.ilike(f'%{bairro_filtro}%'))
+    if mes_filtro:
+        ano, mes = mes_filtro.split('-')
+        ocorrencias_query = ocorrencias_query.filter(
+            extract('year', Ocorrencia.data_abertura) == int(ano),
+            extract('month', Ocorrencia.data_abertura) == int(mes)
+        )
     ocorrencias = ocorrencias_query.order_by(Ocorrencia.data_abertura.desc()).all()
     bairros = db.session.query(Ocorrencia.bairro).distinct().order_by(Ocorrencia.bairro).all()
     bairros = [b[0] for b in bairros]
-    return render_template('painel_admin.html', funcionarios=funcionarios, ocorrencias=ocorrencias, bairros=bairros, bairro_filtro=bairro_filtro)
+
+    stats_query = db.session.query(
+        Ocorrencia.bairro,
+        Ocorrencia.tipo,
+        func.count(Ocorrencia.id).label('total')
+    )
+    if mes_filtro:
+        ano, mes = mes_filtro.split('-')
+        stats_query = stats_query.filter(
+            extract('year', Ocorrencia.data_abertura) == int(ano),
+            extract('month', Ocorrencia.data_abertura) == int(mes)
+        )
+    stats = stats_query.group_by(Ocorrencia.bairro, Ocorrencia.tipo).order_by(func.count(Ocorrencia.id).desc()).all()
+
+    return render_template('painel_admin.html', funcionarios=funcionarios, ocorrencias=ocorrencias, bairros=bairros, bairro_filtro=bairro_filtro, stats=stats, mes_filtro=mes_filtro)
 
 
 @admin_bp.route('/admin/funcionarios/cadastrar', methods=['POST'])

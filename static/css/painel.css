@@ -175,6 +175,31 @@
     max-width: 300px;
 }
 
+.filtros-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: flex-end;
+}
+
+.filtros-row .campo {
+    flex: 1;
+    min-width: 180px;
+}
+
+.tipo-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    margin: 2px;
+    background: #f0fdf4;
+    color: #16a34a;
+    border: 1px solid #bbf7d0;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
 .tabela {
     width: 100%;
     border-collapse: separate;

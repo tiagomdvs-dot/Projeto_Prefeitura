@@ -69,45 +69,51 @@
                 <p>Nenhum funcionário cadastrado.</p>
             {% endif %}
         <div class="funcionarios-lista">
-            <h3>Ocorrências por Bairro</h3>
+            <h3>Resumo por Bairro</h3>
             <form method="GET" action="{{ url_for('admin.painel_admin') }}" class="form form-filtro">
-                <div class="campo">
-                    <label for="bairro">FILTRAR POR BAIRRO</label>
-                    <select id="bairro" name="bairro" onchange="this.form.submit()">
-                        <option value="">Todos os bairros</option>
-                        {% for b in bairros %}
-                            <option value="{{ b }}" {% if b == bairro_filtro %}selected{% endif %}>{{ b }}</option>
-                        {% endfor %}
-                    </select>
+                <div class="filtros-row">
+                    <div class="campo">
+                        <label for="mes">MÊS</label>
+                        <input type="month" id="mes" name="mes" value="{{ mes_filtro }}" onchange="this.form.submit()">
+                    </div>
                 </div>
             </form>
-            {% if ocorrencias %}
+            {% if stats %}
+                {% set bairros_agrupados = {} %}
+                {% for s in stats %}
+                    {% if s.bairro not in bairros_agrupados %}
+                        {% set _ = bairros_agrupados.update({s.bairro: {'tipos': [], 'total': 0}}) %}
+                    {% endif %}
+                    {% set _ = bairros_agrupados[s.bairro]['tipos'].append({'tipo': s.tipo, 'total': s.total}) %}
+                    {% set _ = bairros_agrupados[s.bairro].__setitem__('total', bairros_agrupados[s.bairro]['total'] + s.total) %}
+                {% endfor %}
+                {% set bairros_ordenados = bairros_agrupados.items()|sort(attribute='1.total', reverse=true) %}
                 <div class="tabela-wrapper">
                     <table class="tabela">
                         <thead>
                             <tr>
-                                <th>Protocolo</th>
-                                <th>Tipo</th>
                                 <th>Bairro</th>
-                                <th>Status</th>
-                                <th>Data</th>
+                                <th>Tipos de Ocorrência</th>
+                                <th>Total</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for occ in ocorrencias %}
+                            {% for bairro, dados in bairros_ordenados %}
                                 <tr>
-                                    <td><strong>{{ occ.protocolo }}</strong></td>
-                                    <td>{{ occ.tipo }}</td>
-                                    <td>{{ occ.bairro }}</td>
-                                    <td><span class="status status-{{ occ.status }}">{{ occ.status|replace('_', ' ')|title }}</span></td>
-                                    <td>{{ occ.data_abertura.strftime('%d/%m/%Y') }}</td>
+                                    <td><strong>{{ bairro }}</strong></td>
+                                    <td>
+                                        {% for t in dados['tipos'] %}
+                                            <span class="tipo-badge">{{ t.tipo }} ({{ t.total }})</span>
+                                        {% endfor %}
+                                    </td>
+                                    <td><strong>{{ dados['total'] }}</strong></td>
                                 </tr>
                             {% endfor %}
                         </tbody>
                     </table>
                 </div>
             {% else %}
-                <p>Nenhuma ocorrência encontrada.</p>
+                <p>Nenhuma ocorrência no período.</p>
             {% endif %}
         </div>
     </div>
