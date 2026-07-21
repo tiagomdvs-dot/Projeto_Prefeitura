@@ -6,6 +6,11 @@
     <div class="painel-header">
         <h1>Ocorrências do Setor</h1>
     </div>
+    <form method="GET" action="{{ url_for('funcionarios.painel_funcionario') }}" class="form form-filtro">
+        <div class="campo busca-campo">
+            <input type="search" id="busca" name="busca" placeholder="Buscar por protocolo, tipo, bairro, local..." value="{{ busca }}" oninput="if(this.value.length > 2 || this.value.length === 0) this.form.submit()">
+        </div>
+    </form>
     {% if ocorrencias %}
         <div class="ocorrencias-lista">
             {% for ocorrencia in ocorrencias %}

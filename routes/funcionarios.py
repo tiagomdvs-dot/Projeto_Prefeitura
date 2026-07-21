@@ -24,10 +24,21 @@ def painel_funcionario():
     if not hasattr(current_user, 'setor'):
         return redirect(url_for('auth.login_institucional'))
     tipos_do_setor = [t for t, s in TIPO_SETOR_MAP.items() if s == current_user.setor]
-    ocorrencias = Ocorrencia.query.filter(
-        Ocorrencia.tipo.in_(tipos_do_setor)
-    ).order_by(Ocorrencia.data_abertura.desc()).all()
-    return render_template('painel_funcionario.html', ocorrencias=ocorrencias)
+    busca = request.args.get('busca', '').strip()
+    query = Ocorrencia.query.filter(Ocorrencia.tipo.in_(tipos_do_setor))
+    if busca:
+        termo = f'%{busca}%'
+        query = query.filter(
+            db.or_(
+                Ocorrencia.protocolo.ilike(termo),
+                Ocorrencia.tipo.ilike(termo),
+                Ocorrencia.bairro.ilike(termo),
+                Ocorrencia.localizacao.ilike(termo),
+                Ocorrencia.descricao.ilike(termo)
+            )
+        )
+    ocorrencias = query.order_by(Ocorrencia.data_abertura.desc()).all()
+    return render_template('painel_funcionario.html', ocorrencias=ocorrencias, busca=busca)
 
 
 @funcionarios_bp.route('/funcionario/ocorrencias/<int:ocorrencia_id>/atender', methods=['GET', 'POST'])
