@@ -14,7 +14,17 @@
                 <span class="logo-icon">&#127979;</span>
                 <div class="logo-texto">
                     <strong>Prefeitura Municipal</strong>
-                    <small>Secretaria de Infraestrutura e Mobilidade Urbana</small>
+                    <small>{% if current_user.is_authenticated and current_user.setor is defined and current_user.setor %}
+                        {%- set secretarias = {
+                            'Infraestrutura': 'Secretaria de Infraestrutura e Mobilidade Urbana',
+                            'Limpeza Urbana': 'Secretaria de Limpeza Urbana',
+                            'Iluminação Pública': 'Secretaria de Iluminação Pública',
+                            'Trânsito': 'Secretaria de Trânsito',
+                            'Meio Ambiente': 'Secretaria de Meio Ambiente',
+                            'Administrador': 'Administração Municipal'
+                        } -%}
+                        {{ secretarias.get(current_user.setor, 'Secretaria de ' + current_user.setor) }}
+                    {% else %}Secretaria de Infraestrutura e Mobilidade Urbana{% endif %}</small>
                 </div>
             </a>
                 <nav class="nav-cabecalho">
@@ -41,7 +51,17 @@
         {% block conteudo %}{% endblock %}
     </main>
     <footer class="rodape">
-        <p>Secretaria de Infraestrutura e Mobilidade Urbana</p>
+        <p>{% if current_user.is_authenticated and current_user.setor is defined and current_user.setor %}
+            {%- set secretarias = {
+                'Infraestrutura': 'Secretaria de Infraestrutura e Mobilidade Urbana',
+                'Limpeza Urbana': 'Secretaria de Limpeza Urbana',
+                'Iluminação Pública': 'Secretaria de Iluminação Pública',
+                'Trânsito': 'Secretaria de Trânsito',
+                'Meio Ambiente': 'Secretaria de Meio Ambiente',
+                'Administrador': 'Administração Municipal'
+            } -%}
+            {{ secretarias.get(current_user.setor, 'Secretaria de ' + current_user.setor) }}
+        {% else %}Secretaria de Infraestrutura e Mobilidade Urbana{% endif %}</p>
     </footer>
     {% block js %}{% endblock %}
 </body>
