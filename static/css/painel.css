@@ -206,6 +206,20 @@
     box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
 }
 
+.btn-exportar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 13px 20px;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    min-height: 48px;
+    transition: var(--transicao);
+}
+
 .tipo-badge {
     display: inline-block;
     padding: 4px 10px;

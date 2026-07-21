@@ -27,16 +27,7 @@ def painel_funcionario():
     busca = request.args.get('busca', '').strip()
     query = Ocorrencia.query.filter(Ocorrencia.tipo.in_(tipos_do_setor))
     if busca:
-        termo = f'%{busca}%'
-        query = query.filter(
-            db.or_(
-                Ocorrencia.protocolo.ilike(termo),
-                Ocorrencia.tipo.ilike(termo),
-                Ocorrencia.bairro.ilike(termo),
-                Ocorrencia.localizacao.ilike(termo),
-                Ocorrencia.descricao.ilike(termo)
-            )
-        )
+        query = query.filter(Ocorrencia.protocolo.ilike(f'%{busca}%'))
     ocorrencias = query.order_by(Ocorrencia.data_abertura.desc()).all()
     return render_template('painel_funcionario.html', ocorrencias=ocorrencias, busca=busca)
 

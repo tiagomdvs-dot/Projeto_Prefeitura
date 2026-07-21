@@ -1,4 +1,6 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+import csv
+from io import StringIO
+from flask import Blueprint, render_template, request, redirect, url_for, flash, Response
 from flask_login import login_required, current_user
 from werkzeug.security import generate_password_hash
 from models import db, Funcionario, Ocorrencia
@@ -135,3 +137,44 @@ def excluir_funcionario(funcionario_id):
     db.session.commit()
     flash('Funcionário excluído com sucesso!', 'sucesso')
     return redirect(url_for('admin.painel_admin'))
+
+
+@admin_bp.route('/admin/exportar/csv')
+@login_required
+def exportar_csv():
+    if not hasattr(current_user, 'setor') or current_user.setor != 'Administrador':
+        return redirect(url_for('auth.login_institucional'))
+    mes_filtro = request.args.get('mes', '')
+    query = db.session.query(
+        Ocorrencia.protocolo,
+        Ocorrencia.tipo,
+        Ocorrencia.bairro,
+        Ocorrencia.localizacao,
+        Ocorrencia.status,
+        Ocorrencia.data_abertura,
+        Ocorrencia.data_conclusao
+    )
+    if mes_filtro:
+        ano, mes = mes_filtro.split('-')
+        query = query.filter(
+            extract('year', Ocorrencia.data_abertura) == int(ano),
+            extract('month', Ocorrencia.data_abertura) == int(mes)
+        )
+    rows = query.order_by(Ocorrencia.data_abertura.desc()).all()
+
+    si = StringIO()
+    writer = csv.writer(si)
+    writer.writerow(['Protocolo', 'Tipo', 'Bairro', 'Localizacao', 'Status', 'Data Abertura', 'Data Conclusao'])
+    for r in rows:
+        writer.writerow([
+            r.protocolo, r.tipo, r.bairro, r.localizacao, r.status,
+            r.data_abertura.strftime('%d/%m/%Y %H:%M') if r.data_abertura else '',
+            r.data_conclusao.strftime('%d/%m/%Y %H:%M') if r.data_conclusao else ''
+        ])
+
+    nome_arquivo = f'ocorrencias_{mes_filtro or "todas"}.csv'
+    return Response(
+        si.getvalue(),
+        mimetype='text/csv',
+        headers={'Content-Disposition': f'attachment; filename={nome_arquivo}'}
+    )

@@ -77,6 +77,10 @@
                         <label for="mes">MÊS</label>
                         <input type="month" id="mes" name="mes" value="{{ mes_filtro }}" onchange="this.form.submit()">
                     </div>
+                    <div class="campo">
+                        <label>&nbsp;</label>
+                        <a href="{{ url_for('admin.exportar_csv', mes=mes_filtro) }}" class="btn btn-secundario btn-exportar">&#128229; Exportar CSV</a>
+                    </div>
                 </div>
             </form>
             {% if stats %}
