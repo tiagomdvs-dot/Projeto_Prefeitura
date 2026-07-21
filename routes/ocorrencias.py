@@ -1,4 +1,5 @@
 import os
+import uuid
 from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
@@ -37,12 +38,16 @@ def nova_ocorrencia():
         if 'foto' in request.files:
             foto = request.files['foto']
             if foto and foto.filename:
-                filename = secure_filename(foto.filename)
+                ext = os.path.splitext(foto.filename)[1] or '.jpg'
+                nome_unico = f'{uuid.uuid4().hex}{ext}'
                 upload_path = os.path.join(current_app.root_path, 'static', 'uploads')
                 os.makedirs(upload_path, exist_ok=True)
-                caminho = os.path.join(upload_path, filename)
-                foto.save(caminho)
-                foto_url = f'uploads/{filename}'
+                caminho = os.path.join(upload_path, nome_unico)
+                try:
+                    foto.save(caminho)
+                    foto_url = f'uploads/{nome_unico}'
+                except Exception:
+                    foto_url = None
 
         protocolo = gerar_protocolo()
         ocorrencia = Ocorrencia(
