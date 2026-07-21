@@ -342,6 +342,28 @@
     min-height: 100px;
 }
 
+.setor-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 10px;
+    margin-top: 4px;
+    font-size: 0.85rem;
+}
+
+.setor-label {
+    color: var(--cor-texto-claro);
+    font-weight: 500;
+}
+
+.setor-nome {
+    color: #16a34a;
+    font-weight: 700;
+}
+
 .campo-foto {
     position: relative;
 }

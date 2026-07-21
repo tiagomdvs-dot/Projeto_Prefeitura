@@ -11,4 +11,20 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
+
+    var tipoSelect = document.getElementById('tipo');
+    var setorInfo = document.getElementById('setor-info');
+    var setorNome = document.getElementById('setor-nome');
+
+    if (tipoSelect && setorInfo && setorNome) {
+        tipoSelect.addEventListener('change', function () {
+            var tipo = this.value;
+            if (tipo && window.TIPO_SETOR_MAP && window.TIPO_SETOR_MAP[tipo]) {
+                setorNome.textContent = window.TIPO_SETOR_MAP[tipo];
+                setorInfo.style.display = 'flex';
+            } else {
+                setorInfo.style.display = 'none';
+            }
+        });
+    }
 });

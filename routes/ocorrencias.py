@@ -18,6 +18,18 @@ TIPOS_OCORRENCIA = [
     'Outros',
 ]
 
+TIPO_SETOR_MAP = {
+    'Buraco em via': 'Infraestrutura',
+    'Coleta de resíduos': 'Limpeza Urbana',
+    'Iluminação pública': 'Iluminação Pública',
+    'Sinalização de trânsito': 'Trânsito',
+    'Limpeza urbana': 'Limpeza Urbana',
+    'Poda de árvores': 'Meio Ambiente',
+    'Calçamento': 'Infraestrutura',
+    'Esgoto a céu aberto': 'Infraestrutura',
+    'Outros': 'Infraestrutura',
+}
+
 
 @ocorrencias_bp.route('/ocorrencias/nova', methods=['GET', 'POST'])
 @login_required
@@ -31,7 +43,7 @@ def nova_ocorrencia():
 
         if not all([tipo, descricao, localizacao, bairro]):
             flash('Preencha todos os campos obrigatórios', 'erro')
-            return render_template('nova_ocorrencia.html', tipos=TIPOS_OCORRENCIA)
+            return render_template('nova_ocorrencia.html', tipos=TIPOS_OCORRENCIA, tipo_setor_map=TIPO_SETOR_MAP)
 
         foto_data = None
         foto_mime = None
@@ -63,7 +75,7 @@ def nova_ocorrencia():
         db.session.commit()
         flash(f'Ocorrência registrada! Protocolo: {protocolo}', 'sucesso')
         return redirect(url_for('ocorrencias.listar_ocorrencias'))
-    return render_template('nova_ocorrencia.html', tipos=TIPOS_OCORRENCIA)
+    return render_template('nova_ocorrencia.html', tipos=TIPOS_OCORRENCIA, tipo_setor_map=TIPO_SETOR_MAP)
 
 
 @ocorrencias_bp.route('/ocorrencias')

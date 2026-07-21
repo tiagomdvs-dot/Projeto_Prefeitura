@@ -5,19 +5,27 @@ from datetime import datetime
 
 funcionarios_bp = Blueprint('funcionarios', __name__)
 
+TIPO_SETOR_MAP = {
+    'Buraco em via': 'Infraestrutura',
+    'Coleta de resíduos': 'Limpeza Urbana',
+    'Iluminação pública': 'Iluminação Pública',
+    'Sinalização de trânsito': 'Trânsito',
+    'Limpeza urbana': 'Limpeza Urbana',
+    'Poda de árvores': 'Meio Ambiente',
+    'Calçamento': 'Infraestrutura',
+    'Esgoto a céu aberto': 'Infraestrutura',
+    'Outros': 'Infraestrutura',
+}
+
 
 @funcionarios_bp.route('/funcionario/painel')
 @login_required
 def painel_funcionario():
     if not hasattr(current_user, 'setor'):
         return redirect(url_for('auth.login_institucional'))
+    tipos_do_setor = [t for t, s in TIPO_SETOR_MAP.items() if s == current_user.setor]
     ocorrencias = Ocorrencia.query.filter(
-        Ocorrencia.tipo.ilike(f'%{current_user.setor}%') |
-        Ocorrencia.tipo.in_([
-            'Buraco em via', 'Coleta de resíduos', 'Iluminação pública',
-            'Sinalização de trânsito', 'Limpeza urbana', 'Poda de árvores',
-            'Calçamento', 'Esgoto a céu aberto', 'Outros'
-        ])
+        Ocorrencia.tipo.in_(tipos_do_setor)
     ).order_by(Ocorrencia.data_abertura.desc()).all()
     return render_template('painel_funcionario.html', ocorrencias=ocorrencias)
 
