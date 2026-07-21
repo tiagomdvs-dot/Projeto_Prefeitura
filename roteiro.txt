@@ -1,0 +1,82 @@
+ROTEIRO DO PROJETO - SISTEMA PREFEITURA MUNICIPAL
+===================================================
+
+1. VISÃO GERAL
+--------------
+Plataforma digital para gestão de ocorrências de serviços públicos.
+Cidadãos registram problemas (buraco em via, iluminação, coleta, etc.),
+funcionários atendem conforme seu setor, e administradores gerenciam o sistema.
+
+2. TECNOLOGIAS UTILIZADAS
+-------------------------
+- Backend: Python 3 + Flask (microframework web)
+- Banco de Dados: PostgreSQL (NeonDB - cloud)
+- ORM: SQLAlchemy
+- Autenticação: Flask-Login
+- Frontend: HTML5, CSS3 (Flexbox, Grid, animações), JavaScript puro
+- Hospedagem: Vercel (serverless)
+- Controle de Versão: Git + GitHub
+
+3. TELAS DO SISTEMA
+--------------------
+
+TELA INICIAL (/) - Página de entrada com dois botões:
+  - "Sou Cidadão" → leva ao login do cidadão
+  - "Sou Funcionário" → leva ao login institucional
+
+LOGIN CIDADÃO (/login)
+  - Entrada com e-mail e senha
+  - Link para cadastro e "esqueci senha"
+  - Após login, redireciona para "Minhas ocorrências"
+
+CADASTRO CIDADÃO (/cadastro)
+  - Formulário com nome, CPF (com validação), e-mail e senha
+  - Após cadastro, login automático
+
+MINHAS OCORRÊNCIAS (/ocorrencias)
+  - Lista todas as ocorrências do cidadão logado
+  - Cada card mostra: protocolo, tipo, bairro, status, data
+  - Botão "Nova ocorrência" e link para "Notificações"
+
+NOVA OCORRÊNCIA (/ocorrencias/nova)
+  - Seleciona tipo (ao escolher, mostra o departamento responsável)
+  - Descrição, bairro, localização, foto (opcional)
+  - Opção de anonimato
+  - Gera protocolo automático (PROC-ANO-NUM)
+
+DETALHE DA OCORRÊNCIA (/ocorrencias/<id>)
+  - Mostra todas as informações da ocorrência
+  - Atualizações feitas pelos funcionários
+  - Avaliação por estrelas (se concluída)
+
+NOTIFICAÇÕES (/notificacoes)
+  - Lista notificações recebidas pelo cidadão
+  - Cada notificação é um link para o detalhe da ocorrência
+
+PAINEL FUNCIONÁRIO (/funcionario/painel)
+  - Filtra ocorrências do setor do funcionário logado
+  - Cada card leva ao atendimento da ocorrência
+
+ATENDIMENTO (/funcionario/ocorrencias/<id>/atender)
+  - Funcionário vê detalhes, adiciona observação, altera status
+  - Opção de notificar o cidadão sobre a atualização
+  - Botão para excluir ocorrência com motivo
+
+PAINEL ADMIN (/admin/painel)
+  - Cadastro, edição e exclusão de funcionários
+  - Resumo de ocorrências por bairro (com filtro mensal)
+  - Mostra tipos de ocorrência e total por bairro (do maior para o menor)
+
+TECNOLOGIAS
+-----------
+- Python 3 + Flask (backend)
+- PostgreSQL / NeonDB (banco de dados)
+- SQLAlchemy (ORM)
+- Flask-Login (autenticação)
+- HTML5 + CSS3 + JavaScript puro (frontend)
+- Git + GitHub (versionamento)
+- Vercel (deploy)</think>
+
+<｜DSML｜tool_calls>
+<｜DSML｜invoke name="write">
+<｜DSML｜parameter name="filePath" string="true">C:\Users\thyag\OneDrive\Desktop\israel\roteiro.txt
