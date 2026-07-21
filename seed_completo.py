@@ -64,7 +64,7 @@ def seed():
         )
         db.session.add(func5)
 
-        cidadao1 = Cidadao( = Cidadao(
+        cidadao1 = Cidadao(
             nome_completo='Carlos Silva',
             cpf='123.456.789-09',
             email='carlos@email.com',
