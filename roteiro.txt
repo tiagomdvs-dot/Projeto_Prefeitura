@@ -67,6 +67,7 @@ PAINEL ADMIN (/admin/painel)
   - Cadastro, edição e exclusão de funcionários
   - Resumo de ocorrências por bairro (com filtro mensal)
   - Mostra tipos de ocorrência e total por bairro (do maior para o menor)
+  - Resumo por setor: total, abertas, em andamento, concluídas, atendidas e média de avaliação
   - Botão "Exportar CSV" para baixar relatório de ocorrências
 
 4. MAPEAMENTO TIPO DE OCORRÊNCIA → SETOR
