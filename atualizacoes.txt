@@ -18,3 +18,12 @@ Implementações realizadas:
 - seed_completo.py com dados de exemplo
 - test_funcional.py com 16 testes dinâmicos (todos passando)
 - requirements.txt e vercel.json
+
+21/07/2026 - Mapeamento tipo de ocorrência para setor do funcionário
+
+Implementações realizadas:
+- Mapeamento TIPO_SETOR_MAP: cada tipo de ocorrência vinculado a um departamento
+- Formulário de nova ocorrência mostra automaticamente o departamento responsável ao selecionar o tipo
+- Painel do funcionário filtra ocorrências apenas pelos tipos do seu setor
+- Código duplicado do mapeamento em routes/ocorrencias.py e routes/funcionarios.py
+- Commit: 0a11ecb
