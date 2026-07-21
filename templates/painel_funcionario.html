@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block titulo %}Painel do Funcionário{% endblock %}
+{% block css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/painel.css') }}">{% endblock %}
+{% block conteudo %}
+<div class="painel-container">
+    <div class="painel-header">
+        <h1>Ocorrências do Setor</h1>
+    </div>
+    {% if ocorrencias %}
+        <div class="ocorrencias-lista">
+            {% for ocorrencia in ocorrencias %}
+                <a href="{{ url_for('funcionarios.atender_ocorrencia', ocorrencia_id=ocorrencia.id) }}" class="ocorrencia-card">
+                    <div class="ocorrencia-card-header">
+                        <strong>{{ ocorrencia.protocolo }}</strong>
+                        <span class="status status-{{ ocorrencia.status }}">{{ ocorrencia.status|replace('_', ' ')|title }}</span>
+                    </div>
+                    <div class="ocorrencia-card-body">
+                        <p class="ocorrencia-tipo">{{ ocorrencia.tipo }}</p>
+                        <p class="ocorrencia-local">{{ ocorrencia.localizacao }}</p>
+                    </div>
+                    <div class="ocorrencia-card-footer">
+                        <small>{{ ocorrencia.data_abertura.strftime('%d/%m/%Y %H:%M') }}</small>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="vazio">
+            <p>Nenhuma ocorrência para o seu setor.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

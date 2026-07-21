@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block titulo %}Atender {{ ocorrencia.protocolo }}{% endblock %}
+{% block css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/painel.css') }}">{% endblock %}
+{% block conteudo %}
+<div class="detalhe-container">
+    <a href="{{ url_for('funcionarios.painel_funcionario') }}" class="btn-voltar">&#8592; Voltar</a>
+    <div class="detalhe-card">
+        <div class="detalhe-header">
+            <h1>{{ ocorrencia.protocolo }}</h1>
+            <span class="status status-{{ ocorrencia.status }}">{{ ocorrencia.status|replace('_', ' ')|title }}</span>
+        </div>
+        <div class="detalhe-info">
+            <p><strong>Tipo:</strong> {{ ocorrencia.tipo }}</p>
+            <p><strong>Local:</strong> {{ ocorrencia.localizacao }}</p>
+            <p><strong>Cidadão:</strong> {{ ocorrencia.cidadao.nome_completo if ocorrencia.cidadao else 'Anônimo' }}</p>
+            <p><strong>Data de abertura:</strong> {{ ocorrencia.data_abertura.strftime('%d/%m/%Y %H:%M') }}</p>
+        </div>
+        <div class="detalhe-descricao">
+            <h3>Descrição</h3>
+            <p>{{ ocorrencia.descricao }}</p>
+        </div>
+        {% if ocorrencia.foto_url %}
+            <div class="detalhe-foto">
+                <img src="{{ url_for('static', filename=ocorrencia.foto_url) }}" alt="Foto da ocorrência">
+            </div>
+        {% endif %}
+        <div class="atendimento-form">
+            <h3>Atendimento</h3>
+            <form method="POST" action="{{ url_for('funcionarios.atender_ocorrencia', ocorrencia_id=ocorrencia.id) }}" class="form">
+                <div class="campo">
+                    <label for="status">Status</label>
+                    <select id="status" name="status">
+                        <option value="aberta" {% if ocorrencia.status == 'aberta' %}selected{% endif %}>Aberta</option>
+                        <option value="em_andamento" {% if ocorrencia.status == 'em_andamento' %}selected{% endif %}>Em andamento</option>
+                        <option value="concluida" {% if ocorrencia.status == 'concluida' %}selected{% endif %}>Concluída</option>
+                    </select>
+                </div>
+                <div class="campo">
+                    <label for="observacao">OBSERVAÇÃO DO ATENDIMENTO</label>
+                    <textarea id="observacao" name="observacao" rows="4" placeholder="Descreva as ações tomadas" required></textarea>
+                </div>
+                <div class="campo-checkbox">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="notificar_cidadao" id="notificar_cidadao" checked>
+                        <span>Notificar cidadão sobre esta atualização</span>
+                    </label>
+                </div>
+                <div class="form-acoes">
+                    <button type="submit" name="acao" value="notificar" class="btn btn-secundario">Notificar cidadão</button>
+                    <button type="submit" name="acao" value="salvar" class="btn btn-primario">Salvar e notificar</button>
+                </div>
+            </form>
+            <div class="atendimento-excluir">
+                <button type="button" class="btn btn-excluir-full" onclick="abrirModalExclusao()">Excluir ocorrência</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal-exclusao" class="modal" style="display:none">
+    <div class="modal-overlay" onclick="fecharModalExclusao()"></div>
+    <div class="modal-card">
+        <div class="modal-header">
+            <h2>Excluir {{ ocorrencia.protocolo }}</h2>
+            <button class="modal-fechar" onclick="fecharModalExclusao()">&times;</button>
+        </div>
+        <form method="POST" action="{{ url_for('funcionarios.excluir_ocorrencia', ocorrencia_id=ocorrencia.id) }}" class="form">
+            <div class="campo">
+                <label for="motivo_exclusao">MOTIVO DA EXCLUSÃO</label>
+                <textarea id="motivo_exclusao" name="motivo_exclusao" rows="4" placeholder="Explique ao cidadão o motivo da exclusão desta ocorrência" required></textarea>
+                <small class="dica">Este motivo será enviado como notificação ao cidadão.</small>
+            </div>
+            <div class="form-acoes">
+                <button type="button" class="btn btn-secundario" onclick="fecharModalExclusao()">Cancelar</button>
+                <button type="submit" class="btn btn-excluir-full">Confirmar exclusão</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+<script>
+function abrirModalExclusao() {
+    document.getElementById('modal-exclusao').style.display = 'flex';
+}
+
+function fecharModalExclusao() {
+    document.getElementById('modal-exclusao').style.display = 'none';
+}
+
+document.getElementById('modal-exclusao').addEventListener('click', function(e) {
+    if (e.target === this) fecharModalExclusao();
+});
+</script>
+        </div>
+    </div>
+</div>
+{% endblock %}

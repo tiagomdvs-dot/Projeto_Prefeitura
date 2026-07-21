@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block titulo %}Nova Ocorrência{% endblock %}
+{% block css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/ocorrencias.css') }}">{% endblock %}
+{% block conteudo %}
+<div class="form-container">
+    <div class="form-card">
+        <a href="{{ url_for('ocorrencias.listar_ocorrencias') }}" class="btn-voltar">&#8592; Voltar</a>
+        <div class="form-header">
+            <span class="form-icon">&#128196;</span>
+            <h1>Nova Ocorrência</h1>
+            <p>Registre um problema para a prefeitura</p>
+        </div>
+        <form method="POST" action="{{ url_for('ocorrencias.nova_ocorrencia') }}" class="form" enctype="multipart/form-data">
+            <div class="campo">
+                <label for="tipo">TIPO DE OCORRÊNCIA</label>
+                <select id="tipo" name="tipo" required>
+                    <option value="">Selecione o tipo</option>
+                    {% for tipo in tipos %}
+                        <option value="{{ tipo }}">{{ tipo }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="campo">
+                <label for="descricao">DESCRIÇÃO</label>
+                <textarea id="descricao" name="descricao" rows="4" placeholder="Descreva detalhadamente o problema" required></textarea>
+            </div>
+            <div class="campo">
+                <label for="localizacao">LOCALIZAÇÃO</label>
+                <input type="text" id="localizacao" name="localizacao" placeholder="Rua, número, bairro" required>
+            </div>
+            <div class="campo">
+                <label for="foto">FOTO (opcional)</label>
+                <div class="campo-foto">
+                    <input type="file" id="foto" name="foto" accept="image/*">
+                    <label for="foto" class="btn-foto">&#128247; Anexar foto</label>
+                </div>
+            </div>
+            <div class="campo-identificacao">
+                <span class="identificacao-label">IDENTIFICAÇÃO</span>
+                <div class="identificacao-opcoes">
+                    <label class="radio-label">
+                        <input type="radio" name="anonimo" value="nao" checked>
+                        <span>Identificar-se</span>
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="anonimo" value="sim">
+                        <span>Enviar anonimamente</span>
+                    </label>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primario btn-full">Enviar ocorrência</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block js %}<script src="{{ url_for('static', filename='js/ocorrencias.js') }}"></script>{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block titulo %}Login - Cidadão{% endblock %}
+{% block css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">{% endblock %}
+{% block conteudo %}
+<div class="form-container">
+    <div class="form-card">
+        <div class="form-header">
+            <span class="form-icon">&#128100;</span>
+            <h1>Portal do Cidadão</h1>
+            <p>Acesse sua conta para abrir e acompanhar ocorrências</p>
+        </div>
+        <form method="POST" action="{{ url_for('auth.login') }}" class="form">
+            <div class="campo">
+                <label for="email">E-MAIL</label>
+                <input type="email" id="email" name="email" placeholder="seu@email.com" required autofocus>
+            </div>
+            <div class="campo">
+                <label for="senha">SENHA</label>
+                <input type="password" id="senha" name="senha" placeholder="Sua senha" required>
+            </div>
+            <button type="submit" class="btn btn-primario btn-full">Entrar</button>
+        </form>
+        <div class="form-links">
+            <a href="{{ url_for('auth.esqueci_senha') }}">Esqueci minha senha</a>
+            <a href="{{ url_for('cidadaos.cadastro') }}">Criar minha conta</a>
+        </div>
+        <div class="form-extra">
+            <a href="{{ url_for('auth.login_institucional') }}" class="link-institucional">Acesso Institucional</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

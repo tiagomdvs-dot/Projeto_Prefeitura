@@ -1,0 +1,20 @@
+20/07/2026 - Criação inicial do sistema Prefeitura
+
+Implementações realizadas:
+- Estrutura completa do projeto (pastas templates/, static/css/, static/js/, routes/)
+- Models do banco de dados (Cidadaos, Funcionarios, Ocorrencias, Atualizacoes_Ocorrencias, Avaliacoes, Notificacoes)
+- app.py com Flask, SQLAlchemy, Flask-Login e blueprints
+- Utilitários (validação CPF, formatação, geração de protocolo, senha temporária)
+- Rotas de autenticação (login cidadão, login institucional, esqueci senha)
+- Rotas de cadastro de cidadão com validações
+- Rotas de ocorrências (nova, listagem, detalhe)
+- Rotas de funcionários (painel, atendimento, excluir ocorrência com notificação)
+- Rotas de administrador (painel, cadastro/edição/exclusão de funcionários)
+- Rotas de notificações (listagem, marcar como lida)
+- Rotas de avaliação (avaliar ocorrências concluídas)
+- Templates HTML para todas as telas (login, cadastro, nova ocorrência, acompanhamento, detalhe, notificações, login institucional, painel funcionário, atendimento, painel admin, esqueci senha)
+- CSS responsivo mobile-first com design minimalista
+- JavaScript para validação de formulários, upload de foto, avaliação por estrelas e modais
+- seed_completo.py com dados de exemplo
+- test_funcional.py com 16 testes dinâmicos (todos passando)
+- requirements.txt e vercel.json

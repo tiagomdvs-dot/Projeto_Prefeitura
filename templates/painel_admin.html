@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% block titulo %}Painel Administrativo{% endblock %}
+{% block css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/painel.css') }}">{% endblock %}
+{% block conteudo %}
+<div class="painel-container">
+    <div class="painel-header">
+        <h1>Painel Administrativo</h1>
+    </div>
+    <div class="painel-grid">
+        <div class="painel-card">
+            <h2>Cadastrar Funcionário</h2>
+            <form method="POST" action="{{ url_for('admin.cadastrar_funcionario') }}" class="form">
+                <div class="campo">
+                    <label for="nome">NOME COMPLETO</label>
+                    <input type="text" id="nome" name="nome" placeholder="Nome do funcionário" required>
+                </div>
+                <div class="campo">
+                    <label for="email">E-MAIL INSTITUCIONAL</label>
+                    <input type="email" id="email" name="email" placeholder="nome@picos.pi.gov.br" required>
+                </div>
+                <div class="campo">
+                    <label for="setor">SETOR</label>
+                    <select id="setor" name="setor" required>
+                        <option value="">Selecione o setor</option>
+                        <option value="Infraestrutura">Infraestrutura</option>
+                        <option value="Limpeza Urbana">Limpeza Urbana</option>
+                        <option value="Iluminação Pública">Iluminação Pública</option>
+                        <option value="Trânsito">Trânsito</option>
+                        <option value="Meio Ambiente">Meio Ambiente</option>
+                        <option value="Administrador">Administrador</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primario btn-full">Cadastrar funcionário</button>
+            </form>
+        </div>
+        <div class="funcionarios-lista">
+            <h3>Funcionários Cadastrados</h3>
+            {% if funcionarios %}
+                <div class="tabela-wrapper">
+                    <table class="tabela">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>E-mail</th>
+                                <th>Setor</th>
+                                <th>Ativo</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for func in funcionarios %}
+                                <tr>
+                                    <td>{{ func.nome_completo }}</td>
+                                    <td>{{ func.email_institucional }}</td>
+                                    <td>{{ func.setor }}</td>
+                                    <td>{{ 'Sim' if func.ativo else 'Não' }}</td>
+                                    <td class="acoes">
+                                        <button class="btn-acao btn-editar" onclick='abrirEdicao({{ func.id }}, {{ func.nome_completo|tojson }}, {{ func.email_institucional|tojson }}, {{ func.setor|tojson }})'>Editar</button>
+                                        <form method="POST" action="{{ url_for('admin.excluir_funcionario', funcionario_id=func.id) }}" style="display:inline" onsubmit="return confirm('Excluir {{ func.nome_completo }}?')">
+                                            <button type="submit" class="btn-acao btn-excluir">Excluir</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p>Nenhum funcionário cadastrado.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div id="modal-editar" class="modal" style="display:none">
+    <div class="modal-overlay" onclick="fecharModal()"></div>
+    <div class="modal-card">
+        <div class="modal-header">
+            <h2>Editar Funcionário</h2>
+            <button class="modal-fechar" onclick="fecharModal()">&times;</button>
+        </div>
+        <form method="POST" action="" class="form" id="form-editar">
+            <div class="campo">
+                <label for="edit-nome">NOME COMPLETO</label>
+                <input type="text" id="edit-nome" name="nome" required>
+            </div>
+            <div class="campo">
+                <label for="edit-email">E-MAIL INSTITUCIONAL</label>
+                <input type="email" id="edit-email" name="email" required>
+            </div>
+            <div class="campo">
+                <label for="edit-setor">SETOR</label>
+                <select id="edit-setor" name="setor" required>
+                    <option value="Infraestrutura">Infraestrutura</option>
+                    <option value="Limpeza Urbana">Limpeza Urbana</option>
+                    <option value="Iluminação Pública">Iluminação Pública</option>
+                    <option value="Trânsito">Trânsito</option>
+                    <option value="Meio Ambiente">Meio Ambiente</option>
+                    <option value="Administrador">Administrador</option>
+                </select>
+            </div>
+            <div class="campo">
+                <label for="edit-senha">NOVA SENHA (opcional)</label>
+                <input type="password" id="edit-senha" name="senha" placeholder="Deixe em branco para manter a atual" minlength="6">
+                <small class="dica">Mínimo de 6 caracteres. Se deixar em branco, a senha atual será mantida.</small>
+            </div>
+            <div class="form-acoes">
+                <button type="button" class="btn btn-secundario" onclick="fecharModal()">Cancelar</button>
+                <button type="submit" class="btn btn-primario">Salvar</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+<script>
+function abrirEdicao(id, nome, email, setor) {
+    document.getElementById('edit-nome').value = nome;
+    document.getElementById('edit-email').value = email;
+    document.getElementById('edit-setor').value = setor;
+    document.getElementById('form-editar').action = '/admin/funcionarios/' + id + '/editar';
+    document.getElementById('modal-editar').style.display = 'flex';
+}
+
+function fecharModal() {
+    document.getElementById('modal-editar').style.display = 'none';
+}
+
+document.getElementById('modal-editar').addEventListener('click', function(e) {
+    if (e.target === this) fecharModal();
+});
+</script>
+{% endblock %}

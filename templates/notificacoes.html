@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block titulo %}Notificações{% endblock %}
+{% block css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/notificacoes.css') }}">{% endblock %}
+{% block conteudo %}
+<div class="notificacoes-container">
+    <h1>Notificações</h1>
+    {% if notificacoes %}
+        <div class="notificacoes-lista">
+            {% for notificacao in notificacoes %}
+                <div class="notificacao-card {% if not notificacao.lida %}nao-lida{% endif %}">
+                    <div class="notificacao-conteudo">
+                        <p>{{ notificacao.mensagem }}</p>
+                        <small>{{ notificacao.data_hora.strftime('%d/%m/%Y %H:%M') }}</small>
+                    </div>
+                    {% if not notificacao.lida %}
+                        <a href="{{ url_for('notificacoes.marcar_lida', notificacao_id=notificacao.id) }}" class="btn-marcar-lida">Marcar como lida</a>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="vazio">
+            <p>Nenhuma notificação.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
