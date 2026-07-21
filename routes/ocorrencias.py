@@ -41,14 +41,13 @@ def nova_ocorrencia():
             if foto and foto.filename:
                 ext = os.path.splitext(foto.filename)[1] or '.jpg'
                 nome_unico = f'{uuid.uuid4().hex}{ext}'
-                upload_path = os.path.join(current_app.root_path, 'static', 'uploads')
-                os.makedirs(upload_path, exist_ok=True)
-                caminho = os.path.join(upload_path, nome_unico)
+                caminho = os.path.join(current_app.static_folder, 'uploads', nome_unico)
+                os.makedirs(os.path.dirname(caminho), exist_ok=True)
                 try:
                     foto.save(caminho)
                     foto_url = f'uploads/{nome_unico}'
-                except Exception:
-                    foto_url = None
+                except Exception as e:
+                    flash(f'Erro ao salvar foto: {str(e)}', 'erro')
 
         protocolo = gerar_protocolo()
         ocorrencia = Ocorrencia(
