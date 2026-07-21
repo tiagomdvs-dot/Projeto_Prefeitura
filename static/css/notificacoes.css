@@ -6,7 +6,8 @@
 .notificacoes-container h1 {
     font-size: 1.3rem;
     color: var(--cor-primaria);
-    margin-bottom: 20px;
+    margin-bottom: 24px;
+    font-weight: 700;
 }
 
 .notificacoes-lista {
@@ -17,19 +18,20 @@
 
 .notificacao-card {
     background: var(--cor-branco);
-    border-radius: var(--raio);
+    border-radius: 14px;
     box-shadow: var(--sombra);
-    padding: 16px;
+    padding: 18px;
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     gap: 12px;
-    transition: all 0.2s;
+    transition: var(--transicao);
+    border: 1px solid rgba(0,0,0,0.02);
 }
 
 .notificacao-card.nao-lida {
     border-left: 4px solid var(--cor-secundaria);
-    background: #f8fbff;
+    background: #f8faff;
 }
 
 .notificacao-conteudo {
@@ -37,30 +39,34 @@
 }
 
 .notificacao-conteudo p {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     margin-bottom: 4px;
+    font-weight: 500;
 }
 
 .notificacao-conteudo small {
-    font-size: 0.8rem;
+    font-size: 0.76rem;
     color: var(--cor-texto-claro);
 }
 
 .btn-marcar-lida {
     color: var(--cor-secundaria);
     text-decoration: none;
-    font-size: 0.8rem;
+    font-size: 0.76rem;
+    font-weight: 600;
     white-space: nowrap;
-    padding: 8px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: var(--transicao);
 }
 
 .btn-marcar-lida:hover {
-    text-decoration: underline;
+    background: #eff6ff;
 }
 
 @media (max-width: 768px) {
     .notificacao-card {
         flex-direction: column;
-        gap: 8px;
+        gap: 10px;
     }
 }
