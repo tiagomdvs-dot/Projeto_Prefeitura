@@ -27,3 +27,5 @@ Implementações realizadas:
 - Painel do funcionário filtra ocorrências apenas pelos tipos do seu setor
 - Código duplicado do mapeamento em routes/ocorrencias.py e routes/funcionarios.py
 - Commit: 0a11ecb
+
+21/07/2026 - Redeploy for version sync
