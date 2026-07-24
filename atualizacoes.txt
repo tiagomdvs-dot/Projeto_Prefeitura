@@ -44,3 +44,9 @@ Implementações realizadas:
 - Badges coloridos para status (amarelo=aberta, azul=andamento, verde=concluída)
 - Largura do painel aumentada para 960px
 - Commits: dc54280, 7e18c3b, 969883d
+
+24/07/2026 - Fix: exclusão de funcionários com atendimentos (Internal Server Error)
+
+Implementações realizadas:
+- Adicionado cascade='all, delete-orphan' no relacionamento Funcionario.atualizacoes em models.py
+- Corrige erro 500 ao excluir funcionários que possuem registros em AtualizacaoOcorrencia

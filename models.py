@@ -31,7 +31,7 @@ class Funcionario(UserMixin, db.Model):
     setor = db.Column(db.String(100), nullable=False)
     ativo = db.Column(db.Boolean, default=True)
 
-    atualizacoes = db.relationship('AtualizacaoOcorrencia', backref='funcionario', lazy=True)
+    atualizacoes = db.relationship('AtualizacaoOcorrencia', backref='funcionario', lazy=True, cascade='all, delete-orphan')
 
     def get_id(self):
         return f'f_{self.id}'
