@@ -14,7 +14,7 @@
                 <img src="{{ url_for('static', filename='brasao.png') }}" alt="Brasão" class="logo-icon">
                 <div class="logo-texto">
                     <strong>Prefeitura Municipal</strong>
-                    <small>{% if current_user.is_authenticated and current_user.setor is defined and current_user.setor %}
+                    <small>{% if current_user.is_authenticated and current_user.setor is defined and current_user.setor and request.endpoint not in ('auth.login', 'auth.login_institucional', 'auth.index', 'cidadaos.cadastro', 'auth.esqueci_senha') %}
                         {%- set secretarias = {
                             'Infraestrutura': 'Secretaria de Infraestrutura e Mobilidade Urbana',
                             'Limpeza Urbana': 'Secretaria de Limpeza Urbana',
@@ -28,7 +28,7 @@
                 </div>
             </a>
                 <nav class="nav-cabecalho">
-                {% if current_user.is_authenticated %}
+                {% if current_user.is_authenticated and request.endpoint not in ('auth.login', 'auth.login_institucional', 'auth.index', 'cidadaos.cadastro', 'auth.esqueci_senha') %}
                     {% if current_user.setor is defined and current_user.setor %}
                         {% if current_user.setor == 'Administrador' %}
                             <a href="{{ url_for('admin.painel_admin') }}" class="nav-link">Painel</a>
@@ -57,7 +57,7 @@
         {% block conteudo %}{% endblock %}
     </main>
     <footer class="rodape">
-        <p>{% if current_user.is_authenticated and current_user.setor is defined and current_user.setor %}
+        <p>{% if current_user.is_authenticated and current_user.setor is defined and current_user.setor and request.endpoint not in ('auth.login', 'auth.login_institucional', 'auth.index', 'cidadaos.cadastro', 'auth.esqueci_senha') %}
             {%- set secretarias = {
                 'Infraestrutura': 'Secretaria de Infraestrutura e Mobilidade Urbana',
                 'Limpeza Urbana': 'Secretaria de Limpeza Urbana',
@@ -70,7 +70,7 @@
         {% else %}Secretaria de Infraestrutura e Mobilidade Urbana{% endif %}</p>
     </footer>
     {% block js %}{% endblock %}
-    {% if current_user.is_authenticated and current_user.setor is not defined %}
+    {% if current_user.is_authenticated and current_user.setor is not defined and request.endpoint not in ('auth.login', 'auth.login_institucional', 'auth.index', 'cidadaos.cadastro', 'auth.esqueci_senha') %}
     <div id="notificacao-toast" class="notificacao-toast" style="display:none" onclick="this.style.display='none'">
         <div class="notificacao-toast-conteudo">
             <strong>Nova notificação!</strong>
