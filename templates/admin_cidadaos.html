@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block titulo %}Cidadãos Cadastrados{% endblock %}
+{% block css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/painel.css') }}">{% endblock %}
+{% block conteudo %}
+<div class="painel-container">
+    <div class="painel-header">
+        <h1>Cidadãos Cadastrados</h1>
+        <p>{{ cidadaos|length }} cidadão(s) no total</p>
+    </div>
+    {% if cidadaos %}
+        <div class="funcionarios-lista">
+            <div class="tabela-wrapper">
+                <table class="tabela">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>CPF</th>
+                            <th>E-mail</th>
+                            <th>Cadastro</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for c in cidadaos %}
+                            <tr>
+                                <td>{{ c.nome_completo }}</td>
+                                <td>{{ c.cpf }}</td>
+                                <td>{{ c.email }}</td>
+                                <td>{{ c.data_cadastro.strftime('%d/%m/%Y') }}</td>
+                                <td class="acoes">
+                                    <form method="POST" action="{{ url_for('admin.excluir_cidadao', cidadao_id=c.id) }}" style="display:inline" onsubmit="return confirm('Excluir {{ c.nome_completo }}? As ocorrências dele serão desvinculadas.')">
+                                        <button type="submit" class="btn-acao btn-excluir">Excluir</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% else %}
+        <div class="vazio">
+            <p>Nenhum cidadão cadastrado.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

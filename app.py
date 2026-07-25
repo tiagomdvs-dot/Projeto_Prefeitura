@@ -10,6 +10,10 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
     'postgresql://neondb_owner:npg_9Am8zyepVdnZ@ep-young-sun-avmnkg2p-pooler.c-11.us-east-1.aws.neon.tech/neondb?channel_binding=require&sslmode=require'
 )
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+    'pool_pre_ping': True,
+    'pool_recycle': 300,
+}
 app.config['UPLOAD_FOLDER'] = os.path.join('static', 'uploads')
 app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024
 

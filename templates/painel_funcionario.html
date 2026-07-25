@@ -5,6 +5,12 @@
 <div class="painel-container">
     <div class="painel-header">
         <h1>Ocorrências do Setor</h1>
+        <div class="filtros-status">
+            <a href="{{ url_for('funcionarios.painel_funcionario', busca=busca) }}" class="filtro-status-btn {% if not status_filtro %}ativo{% endif %}">Todas</a>
+            <a href="{{ url_for('funcionarios.painel_funcionario', status='aberta', busca=busca) }}" class="filtro-status-btn {% if status_filtro == 'aberta' %}ativo{% endif %}">Abertas</a>
+            <a href="{{ url_for('funcionarios.painel_funcionario', status='em_andamento', busca=busca) }}" class="filtro-status-btn {% if status_filtro == 'em_andamento' %}ativo{% endif %}">Em Andamento</a>
+            <a href="{{ url_for('funcionarios.painel_funcionario', status='concluida', busca=busca) }}" class="filtro-status-btn {% if status_filtro == 'concluida' %}ativo{% endif %}">Concluídas</a>
+        </div>
     </div>
     <form method="GET" action="{{ url_for('funcionarios.painel_funcionario') }}" class="form form-filtro">
         <div class="campo busca-campo">

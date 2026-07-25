@@ -11,7 +11,7 @@
     <header class="cabecalho">
         <div class="cabecalho-inner">
             <a href="/" class="logo">
-                <span class="logo-icon">&#127979;</span>
+                <img src="{{ url_for('static', filename='brasao.png') }}" alt="Brasão" class="logo-icon">
                 <div class="logo-texto">
                     <strong>Prefeitura Municipal</strong>
                     <small>{% if current_user.is_authenticated and current_user.setor is defined and current_user.setor %}
@@ -30,6 +30,12 @@
                 <nav class="nav-cabecalho">
                 {% if current_user.is_authenticated %}
                     {% if current_user.setor is defined and current_user.setor %}
+                        {% if current_user.setor == 'Administrador' %}
+                            <a href="{{ url_for('admin.painel_admin') }}" class="nav-link">Painel</a>
+                            <a href="{{ url_for('admin.listar_funcionarios') }}" class="nav-link">Funcionários</a>
+                            <a href="{{ url_for('admin.listar_cidadaos') }}" class="nav-link">Cidadãos</a>
+                            <a href="{{ url_for('admin.cadastrar_funcionario_page') }}" class="nav-link">Cadastrar Funcionário</a>
+                        {% endif %}
                         <span class="nav-usuario">{{ current_user.nome_completo }}{% if current_user.nome_completo != current_user.setor %} - {{ current_user.setor }}{% endif %}</span>
                     {% else %}
                         <a href="{{ url_for('ocorrencias.listar_ocorrencias') }}" class="nav-link">Minhas ocorrências</a>
@@ -64,5 +70,32 @@
         {% else %}Secretaria de Infraestrutura e Mobilidade Urbana{% endif %}</p>
     </footer>
     {% block js %}{% endblock %}
+    {% if current_user.is_authenticated and current_user.setor is not defined %}
+    <div id="notificacao-toast" class="notificacao-toast" style="display:none" onclick="this.style.display='none'">
+        <div class="notificacao-toast-conteudo">
+            <strong>Nova notificação!</strong>
+            <p id="notificacao-toast-msg"></p>
+        </div>
+        <button class="notificacao-toast-fechar" onclick="event.stopPropagation(); document.getElementById('notificacao-toast').style.display='none'">&times;</button>
+    </div>
+    <script>
+    var ultimoTotal = 0;
+    function verificarNotificacoes() {
+        fetch('{{ url_for("notificacoes.nao_lidas") }}')
+            .then(function(r) { return r.json(); })
+            .then(function(d) {
+                if (d.total > ultimoTotal && d.mensagem) {
+                    var toast = document.getElementById('notificacao-toast');
+                    document.getElementById('notificacao-toast-msg').textContent = d.mensagem;
+                    toast.style.display = 'flex';
+                    setTimeout(function() { toast.style.display = 'none'; }, 8000);
+                }
+                ultimoTotal = d.total;
+            })
+            .catch(function() {});
+    }
+    setInterval(verificarNotificacoes, 30000);
+    </script>
+    {% endif %}
 </body>
 </html>

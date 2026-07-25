@@ -25,9 +25,28 @@
                 <img src="{{ ocorrencia.foto }}" alt="Foto da ocorrência">
             </div>
         {% endif %}
+        {% if ocorrencia.atualizacoes %}
+            <div class="historico-atendimentos">
+                <h3>Histórico de Atendimentos</h3>
+                {% for atualizacao in ocorrencia.atualizacoes|sort(attribute='data_hora', reverse=True) %}
+                    <div class="historico-item">
+                        <div class="historico-item-header">
+                            <strong>{{ atualizacao.funcionario.nome_completo }}</strong>
+                            <span>{{ atualizacao.data_hora.strftime('%d/%m/%Y %H:%M') }}</span>
+                        </div>
+                        <p>{{ atualizacao.observacao }}</p>
+                        {% if not loop.last %}<hr>{% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
         <div class="atendimento-form">
             <h3>Atendimento</h3>
             <form method="POST" action="{{ url_for('funcionarios.atender_ocorrencia', ocorrencia_id=ocorrencia.id) }}" class="form">
+                <div class="campo">
+                    <label for="equipe">Equipe designada</label>
+                    <input type="text" id="equipe" name="equipe" value="{{ ocorrencia.equipe or '' }}" placeholder="Ex: Equipe de obra da zona sul">
+                </div>
                 <div class="campo">
                     <label for="status">Status</label>
                     <select id="status" name="status">
@@ -40,20 +59,11 @@
                     <label for="observacao">OBSERVAÇÃO DO ATENDIMENTO</label>
                     <textarea id="observacao" name="observacao" rows="4" placeholder="Descreva as ações tomadas" required></textarea>
                 </div>
-                <div class="campo-checkbox">
-                    <label class="checkbox-label">
-                        <input type="checkbox" name="notificar_cidadao" id="notificar_cidadao" checked>
-                        <span>Notificar cidadão sobre esta atualização</span>
-                    </label>
-                </div>
                 <div class="form-acoes">
-                    <button type="submit" name="acao" value="notificar" class="btn btn-secundario">Notificar cidadão</button>
-                    <button type="submit" name="acao" value="salvar" class="btn btn-primario">Salvar e notificar</button>
+                    <button type="submit" class="btn btn-primario">Salvar e notificar</button>
+                    <button type="button" class="btn btn-excluir-full" onclick="abrirModalExclusao()">Excluir ocorrência</button>
                 </div>
             </form>
-            <div class="atendimento-excluir">
-                <button type="button" class="btn btn-excluir-full" onclick="abrirModalExclusao()">Excluir ocorrência</button>
-            </div>
         </div>
     </div>
 </div>

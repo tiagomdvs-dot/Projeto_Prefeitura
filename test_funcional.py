@@ -138,6 +138,29 @@ def testar_acesso_sem_login():
     log_teste('Bloqueio sem login', r.status_code in (200, 302) and 'login' in r.url.lower())
 
 
+def testar_atendimento_com_equipe():
+    s = requests.Session()
+    s.post(f'{BASE_URL}/login/institucional', data={'email': 'admin@picos.pi.gov.br', 'senha': 'admin123'})
+    r = s.get(f'{BASE_URL}/funcionario/painel')
+    import re
+    match = re.search(r'/funcionario/ocorrencias/(\d+)/atender', r.text)
+    if match:
+        ocorrencia_id = match.group(1)
+        r_get = s.get(f'{BASE_URL}/funcionario/ocorrencias/{ocorrencia_id}/atender')
+        tem_historico = 'Histórico de Atendimentos' in r_get.text
+        r_post = s.post(f'{BASE_URL}/funcionario/ocorrencias/{ocorrencia_id}/atender', data={
+            'observacao': 'Teste de equipe automatizado',
+            'status': 'em_andamento',
+            'notificar_cidadao': 'on',
+            'equipe': 'Equipe Teste Automatizado'
+        })
+        log_teste('Atendimento equipe salva', r_post.status_code in (200, 302))
+        log_teste('Atendimento historico presente', tem_historico)
+    else:
+        log_teste('Atendimento equipe salva', False, 'Nenhuma ocorrência disponível')
+        log_teste('Atendimento historico presente', False, 'Nenhuma ocorrência disponível')
+
+
 if __name__ == '__main__':
     print('=== Testes Funcionais - Sistema Prefeitura ===')
     print()
@@ -154,6 +177,7 @@ if __name__ == '__main__':
     testar_api_ocorrencias()
     testar_api_notificacoes()
     testar_cadastro_funcionario()
+    testar_atendimento_com_equipe()
     testar_cpf_valido()
     testar_email_institucional()
     testar_geracao_protocolo()

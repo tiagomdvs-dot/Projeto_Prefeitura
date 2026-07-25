@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block titulo %}Cadastrar Funcionário{% endblock %}
+{% block css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/painel.css') }}">{% endblock %}
+{% block conteudo %}
+<div class="painel-container">
+    <div class="painel-header">
+        <h1>Cadastrar Funcionário</h1>
+    </div>
+    <div class="painel-card">
+        <form method="POST" action="{{ url_for('admin.cadastrar_funcionario') }}" class="form">
+            <div class="campo">
+                <label for="nome">NOME COMPLETO</label>
+                <input type="text" id="nome" name="nome" placeholder="Nome do funcionário" required>
+            </div>
+            <div class="campo">
+                <label for="email">E-MAIL INSTITUCIONAL</label>
+                <input type="email" id="email" name="email" placeholder="nome@picos.pi.gov.br" required>
+            </div>
+            <div class="campo">
+                <label for="setor">SETOR</label>
+                <select id="setor" name="setor" required>
+                    <option value="">Selecione o setor</option>
+                    {% for s in setores %}
+                        <option value="{{ s }}">{{ s }}</option>
+                    {% endfor %}
+                    <option value="Administrador">Administrador</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primario btn-full">Cadastrar funcionário</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

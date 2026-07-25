@@ -50,3 +50,102 @@ Implementações realizadas:
 Implementações realizadas:
 - Adicionado cascade='all, delete-orphan' no relacionamento Funcionario.atualizacoes em models.py
 - Corrige erro 500 ao excluir funcionários que possuem registros em AtualizacaoOcorrencia
+
+24/07/2026 - Seção de cidadãos cadastrados no painel admin
+
+Implementações realizadas:
+- Adicionada query Cidadao na rota painel_admin
+- Nova seção "Cidadãos Cadastrados" no template painel_admin.html com tabela (nome, CPF, email, data de cadastro)
+- Botão "Excluir" na tabela de cidadãos com confirmação
+- Rota /admin/cidadaos/<id>/excluir que desvincula ocorrências e remove avaliações/notificações antes de excluir
+
+24/07/2026 - Página dedicada para gerenciar cidadãos
+
+Implementações realizadas:
+- Criada rota /admin/cidadaos com listagem completa de cidadãos
+- Criado template admin_cidadaos.html com tabela e botão excluir por linha
+- Tabela de cidadãos substituída no painel admin por card resumo com contador e link "Gerenciar"
+- Adicionado link "Cidadãos" no cabeçalho para admin (ao lado do "Painel" e "Sair")
+- Estilos para card-link e contador em painel.css
+
+24/07/2026 - Removido card de cidadãos do painel admin principal
+
+Implementações realizadas:
+- Card "Cidadãos Cadastrados" com contador removido do painel_admin.html
+- Query cidadaos removida da rota painel_admin
+- Gerenciamento de cidadãos acessível apenas pelo link "Cidadãos" no cabeçalho
+
+24/07/2026 - Link "Cadastrar Funcionário" no cabeçalho do admin
+
+Implementações realizadas:
+- Adicionado link "Cadastrar Funcionário" no nav do admin que ancora no formulário do painel
+- Adicionado id="cadastro-funcionario" no card de cadastro em painel_admin.html
+
+24/07/2026 - Cadastro de funcionário movido para página dedicada
+
+Implementações realizadas:
+- Removido formulário de cadastro do painel_admin.html
+- Criada rota /admin/cadastrar-funcionario com página própria
+- Criado template admin_cadastrar_funcionario.html
+- Link no cabeçalho agora aponta para a página dedicada
+
+24/07/2026 - Funcionários movidos para página dedicada
+
+Implementações realizadas:
+- Lista de funcionários removida do painel_admin.html (incluindo modal de edição e JS)
+- Criada rota /admin/funcionarios com página própria
+- Criado template admin_funcionarios.html com tabela, edição (modal) e exclusão
+- Adicionado link "Funcionários" no cabeçalho do admin
+
+24/07/2026 - Redirects corrigidos para manter o admin na tela correta
+
+Implementações realizadas:
+- cadastrar_funcionario: redirect para admin.cadastrar_funcionario_page (sucesso e erros)
+- editar_funcionario: redirect para admin.listar_funcionarios (sucesso e erros)
+- excluir_funcionario: redirect para admin.listar_funcionarios (sucesso e auto-exclusão)
+
+24/07/2026 - Brasão da prefeitura no cabeçalho
+
+Implementações realizadas:
+- brasao.png movido da raiz para static/
+- Substituído emoji por imagem no logo do cabeçalho
+- Ajustado CSS .logo-icon para exibir imagem com 44px de altura
+
+25/07/2026 - Histórico de atendimentos + campo Equipe na página de atendimento
+
+Implementações realizadas:
+- Adicionado campo `equipe` (String, nullable) no model Ocorrencia (models.py)
+- Rota atender_ocorrencia salva o campo equipe no POST
+- Template atendimento_ocorrencia.html: seção "Histórico de Atendimentos" com todas as atualizações anteriores (ordenadas da mais recente para a mais antiga)
+- Template atendimento_ocorrencia.html: campo "Equipe designada" no formulário (visível apenas para funcionários)
+- CSS para .historico-atendimentos e .historico-item em painel.css
+- Teste funcional testar_atendimento_com_equipe em test_funcional.py
+
+25/07/2026 - Fix: conexão abortada com PostgreSQL (pool_pre_ping + pool_recycle)
+
+Implementações realizadas:
+- Adicionado SQLALCHEMY_ENGINE_OPTIONS com pool_pre_ping=True e pool_recycle=300
+- Corrige erro "Software caused connection abort" causado por conexões stale do pool ao usar Neon (PostgreSQL serverless)
+
+25/07/2026 - Filtro de status no painel do funcionário
+
+Implementações realizadas:
+- Adicionado parâmetro `status` na rota painel_funcionario para filtrar por aberta/em_andamento/concluida
+- Botões de filtro "Todas", "Abertas", "Em Andamento" e "Concluídas" no topo do painel do funcionário
+- Botão ativo destacado com a cor primária (estilo pill/tab)
+- Filtro compatível com a busca por protocolo (parâmetros combinados)
+
+25/07/2026 - Removido checkbox "Notificar cidadão" do atendimento
+
+Implementações realizadas:
+- Checkbox "Notificar cidadão" removido do formulário de atendimento
+- Botão "Notificar cidadão" redundante removido (só mantido "Salvar e notificar")
+- Backend atualizado para notificar sempre (notificar = True fixo)
+
+25/07/2026 - Notificação em tempo real para cidadãos (toast)
+
+Implementações realizadas:
+- Nova rota JSON /notificacoes/nao-lidas retorna total e última mensagem não lida
+- Toast flutuante no canto inferior direito aparece quando chega nova notificação (com fade out após 8s)
+- Polling a cada 30 segundos via JS no base.html (apenas para cidadãos logados, não funcionários)
+- Toast estilizado com borda azul, sombra e animação slideUp

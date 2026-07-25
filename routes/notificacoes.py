@@ -12,6 +12,14 @@ def listar_notificacoes():
     return render_template('notificacoes.html', notificacoes=notificacoes)
 
 
+@notificacoes_bp.route('/notificacoes/nao-lidas')
+@login_required
+def nao_lidas():
+    total = Notificacao.query.filter_by(cidadao_id=current_user.id, lida=False).count()
+    ultima = Notificacao.query.filter_by(cidadao_id=current_user.id, lida=False).order_by(Notificacao.data_hora.desc()).first()
+    return jsonify({'total': total, 'mensagem': ultima.mensagem if ultima else None})
+
+
 @notificacoes_bp.route('/notificacoes/marcar-lida/<int:notificacao_id>')
 @login_required
 def marcar_lida(notificacao_id):

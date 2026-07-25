@@ -51,6 +51,7 @@ class Ocorrencia(db.Model):
     status = db.Column(db.String(20), default='aberta')
     data_abertura = db.Column(db.DateTime, default=datetime.utcnow)
     data_conclusao = db.Column(db.DateTime, nullable=True)
+    equipe = db.Column(db.String(100), nullable=True)
 
     atualizacoes = db.relationship('AtualizacaoOcorrencia', backref='ocorrencia', lazy=True, cascade='all, delete-orphan')
     avaliacao = db.relationship('Avaliacao', backref='ocorrencia', uselist=False, lazy=True, cascade='all, delete-orphan')

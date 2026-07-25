@@ -25,11 +25,14 @@ def painel_funcionario():
         return redirect(url_for('auth.login_institucional'))
     tipos_do_setor = [t for t, s in TIPO_SETOR_MAP.items() if s == current_user.setor]
     busca = request.args.get('busca', '').strip()
+    status_filtro = request.args.get('status', '').strip()
     query = Ocorrencia.query.filter(Ocorrencia.tipo.in_(tipos_do_setor))
     if busca:
         query = query.filter(Ocorrencia.protocolo.ilike(f'%{busca}%'))
+    if status_filtro:
+        query = query.filter(Ocorrencia.status == status_filtro)
     ocorrencias = query.order_by(Ocorrencia.data_abertura.desc()).all()
-    return render_template('painel_funcionario.html', ocorrencias=ocorrencias, busca=busca)
+    return render_template('painel_funcionario.html', ocorrencias=ocorrencias, busca=busca, status_filtro=status_filtro)
 
 
 @funcionarios_bp.route('/funcionario/ocorrencias/<int:ocorrencia_id>/atender', methods=['GET', 'POST'])
@@ -41,11 +44,15 @@ def atender_ocorrencia(ocorrencia_id):
     if request.method == 'POST':
         observacao = request.form.get('observacao', '').strip()
         novo_status = request.form.get('status', '').strip()
-        notificar = request.form.get('notificar_cidadao') == 'on'
+        notificar = True
+        equipe = request.form.get('equipe', '').strip()
 
         if not observacao:
             flash('A observação é obrigatória', 'erro')
             return render_template('atendimento_ocorrencia.html', ocorrencia=ocorrencia)
+
+        if equipe:
+            ocorrencia.equipe = equipe
 
         atualizacao = AtualizacaoOcorrencia(
             ocorrencia_id=ocorrencia.id,

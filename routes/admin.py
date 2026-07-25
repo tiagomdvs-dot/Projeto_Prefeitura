@@ -3,7 +3,7 @@ from io import StringIO
 from flask import Blueprint, render_template, request, redirect, url_for, flash, Response
 from flask_login import login_required, current_user
 from werkzeug.security import generate_password_hash
-from models import db, Funcionario, Ocorrencia, AtualizacaoOcorrencia, Avaliacao
+from models import db, Cidadao, Funcionario, Ocorrencia, AtualizacaoOcorrencia, Avaliacao, Notificacao
 from utils import validar_email_institucional, gerar_senha_temporaria
 from sqlalchemy import func, extract
 
@@ -29,7 +29,6 @@ admin_bp = Blueprint('admin', __name__)
 def painel_admin():
     if not hasattr(current_user, 'setor') or current_user.setor != 'Administrador':
         return redirect(url_for('auth.login_institucional'))
-    funcionarios = Funcionario.query.all()
     bairro_filtro = request.args.get('bairro', '').strip()
     mes_filtro = request.args.get('mes', '')
     ocorrencias_query = Ocorrencia.query
@@ -82,7 +81,33 @@ def painel_admin():
             'media_nota': round(media_nota, 1) if media_nota else None
         })
 
-    return render_template('painel_admin.html', funcionarios=funcionarios, ocorrencias=ocorrencias, bairros=bairros, bairro_filtro=bairro_filtro, stats=stats, mes_filtro=mes_filtro, setor_stats=setor_stats)
+    return render_template('painel_admin.html', ocorrencias=ocorrencias, bairros=bairros, bairro_filtro=bairro_filtro, stats=stats, mes_filtro=mes_filtro, setor_stats=setor_stats)
+
+
+@admin_bp.route('/admin/cadastrar-funcionario')
+@login_required
+def cadastrar_funcionario_page():
+    if not hasattr(current_user, 'setor') or current_user.setor != 'Administrador':
+        return redirect(url_for('auth.login_institucional'))
+    return render_template('admin_cadastrar_funcionario.html', setores=SETORES)
+
+
+@admin_bp.route('/admin/funcionarios')
+@login_required
+def listar_funcionarios():
+    if not hasattr(current_user, 'setor') or current_user.setor != 'Administrador':
+        return redirect(url_for('auth.login_institucional'))
+    funcionarios = Funcionario.query.all()
+    return render_template('admin_funcionarios.html', funcionarios=funcionarios)
+
+
+@admin_bp.route('/admin/cidadaos')
+@login_required
+def listar_cidadaos():
+    if not hasattr(current_user, 'setor') or current_user.setor != 'Administrador':
+        return redirect(url_for('auth.login_institucional'))
+    cidadaos = Cidadao.query.order_by(Cidadao.data_cadastro.desc()).all()
+    return render_template('admin_cidadaos.html', cidadaos=cidadaos)
 
 
 @admin_bp.route('/admin/funcionarios/cadastrar', methods=['POST'])
@@ -96,16 +121,16 @@ def cadastrar_funcionario():
 
     if not all([nome, email, setor]):
         flash('Todos os campos são obrigatórios', 'erro')
-        return redirect(url_for('admin.painel_admin'))
+        return redirect(url_for('admin.cadastrar_funcionario_page'))
 
     from utils import validar_email_institucional
     if not validar_email_institucional(email):
         flash('E-mail institucional inválido. Use o formato nome@picos.pi.gov.br', 'erro')
-        return redirect(url_for('admin.painel_admin'))
+        return redirect(url_for('admin.cadastrar_funcionario_page'))
 
     if Funcionario.query.filter_by(email_institucional=email).first():
         flash('E-mail institucional já cadastrado', 'erro')
-        return redirect(url_for('admin.painel_admin'))
+        return redirect(url_for('admin.cadastrar_funcionario_page'))
 
     from utils import gerar_senha_temporaria
     from werkzeug.security import generate_password_hash
@@ -120,7 +145,7 @@ def cadastrar_funcionario():
     db.session.commit()
 
     flash(f'Funcionário cadastrado! Senha temporária: {senha_temp} (enviar para {email})', 'sucesso')
-    return redirect(url_for('admin.painel_admin'))
+    return redirect(url_for('admin.cadastrar_funcionario_page'))
 
 
 @admin_bp.route('/admin/funcionarios/<int:funcionario_id>/editar', methods=['POST'])
@@ -136,16 +161,16 @@ def editar_funcionario(funcionario_id):
 
     if not all([nome, email, setor]):
         flash('Todos os campos são obrigatórios', 'erro')
-        return redirect(url_for('admin.painel_admin'))
+        return redirect(url_for('admin.listar_funcionarios'))
 
     if not validar_email_institucional(email):
         flash('E-mail institucional inválido. Use o formato nome@picos.pi.gov.br', 'erro')
-        return redirect(url_for('admin.painel_admin'))
+        return redirect(url_for('admin.listar_funcionarios'))
 
     existente = Funcionario.query.filter_by(email_institucional=email).first()
     if existente and existente.id != funcionario_id:
         flash('E-mail institucional já cadastrado por outro funcionário', 'erro')
-        return redirect(url_for('admin.painel_admin'))
+        return redirect(url_for('admin.listar_funcionarios'))
 
     funcionario.nome_completo = nome
     funcionario.email_institucional = email
@@ -154,12 +179,12 @@ def editar_funcionario(funcionario_id):
     if nova_senha:
         if len(nova_senha) < 6:
             flash('A senha deve ter no mínimo 6 caracteres', 'erro')
-            return redirect(url_for('admin.painel_admin'))
+            return redirect(url_for('admin.listar_funcionarios'))
         funcionario.senha_hash = generate_password_hash(nova_senha)
 
     db.session.commit()
     flash('Funcionário atualizado com sucesso!', 'sucesso')
-    return redirect(url_for('admin.painel_admin'))
+    return redirect(url_for('admin.listar_funcionarios'))
 
 
 @admin_bp.route('/admin/funcionarios/<int:funcionario_id>/excluir', methods=['POST'])
@@ -170,11 +195,27 @@ def excluir_funcionario(funcionario_id):
     funcionario = Funcionario.query.get_or_404(funcionario_id)
     if funcionario.id == current_user.id:
         flash('Você não pode excluir a si mesmo', 'erro')
-        return redirect(url_for('admin.painel_admin'))
+        return redirect(url_for('admin.listar_funcionarios'))
     db.session.delete(funcionario)
     db.session.commit()
     flash('Funcionário excluído com sucesso!', 'sucesso')
-    return redirect(url_for('admin.painel_admin'))
+    return redirect(url_for('admin.listar_funcionarios'))
+
+
+@admin_bp.route('/admin/cidadaos/<int:cidadao_id>/excluir', methods=['POST'])
+@login_required
+def excluir_cidadao(cidadao_id):
+    if not hasattr(current_user, 'setor') or current_user.setor != 'Administrador':
+        return redirect(url_for('auth.login_institucional'))
+    cidadao = Cidadao.query.get_or_404(cidadao_id)
+
+    Ocorrencia.query.filter_by(cidadao_id=cidadao.id).update({'cidadao_id': None})
+    Avaliacao.query.filter_by(cidadao_id=cidadao.id).delete()
+    Notificacao.query.filter_by(cidadao_id=cidadao.id).delete()
+    db.session.delete(cidadao)
+    db.session.commit()
+    flash(f'Cidadão {cidadao.nome_completo} excluído com sucesso!', 'sucesso')
+    return redirect(url_for('admin.listar_cidadaos'))
 
 
 @admin_bp.route('/admin/exportar/csv')
