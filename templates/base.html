@@ -71,7 +71,7 @@
     </footer>
     {% block js %}{% endblock %}
     {% if current_user.is_authenticated and current_user.setor is not defined and request.endpoint not in ('auth.login', 'auth.login_institucional', 'auth.index', 'cidadaos.cadastro', 'auth.esqueci_senha') %}
-    <div id="notificacao-toast" class="notificacao-toast" style="display:none" onclick="this.style.display='none'">
+    <div id="notificacao-toast" class="notificacao-toast" style="display:none">
         <div class="notificacao-toast-conteudo">
             <strong>Nova notificação!</strong>
             <p id="notificacao-toast-msg"></p>
@@ -79,22 +79,40 @@
         <button class="notificacao-toast-fechar" onclick="event.stopPropagation(); document.getElementById('notificacao-toast').style.display='none'">&times;</button>
     </div>
     <script>
-    var ultimoTotal = 0;
-    function verificarNotificacoes() {
-        fetch('{{ url_for("notificacoes.nao_lidas") }}')
-            .then(function(r) { return r.json(); })
-            .then(function(d) {
-                if (d.total > ultimoTotal && d.mensagem) {
-                    var toast = document.getElementById('notificacao-toast');
-                    document.getElementById('notificacao-toast-msg').textContent = d.mensagem;
-                    toast.style.display = 'flex';
-                    setTimeout(function() { toast.style.display = 'none'; }, 8000);
-                }
-                ultimoTotal = d.total;
-            })
-            .catch(function() {});
-    }
-    setInterval(verificarNotificacoes, 30000);
+    (function() {
+        var chave = 'notificacao_ultimo_total';
+        function salvar(total) {
+            try { sessionStorage.setItem(chave, total); } catch(e) {}
+        }
+        function carregar() {
+            try { var v = sessionStorage.getItem(chave); return v !== null ? parseInt(v, 10) : -1; } catch(e) { return -1; }
+        }
+        function fecharToast() {
+            var t = document.getElementById('notificacao-toast');
+            if (t) t.style.display = 'none';
+        }
+        function verificar() {
+            fetch('{{ url_for("notificacoes.nao_lidas") }}')
+                .then(function(r) { return r.json(); })
+                .then(function(d) {
+                    var ultimo = carregar();
+                    if (ultimo === -1) {
+                        salvar(d.total);
+                    } else if (d.total > ultimo && d.mensagem) {
+                        document.getElementById('notificacao-toast-msg').textContent = d.mensagem;
+                        document.getElementById('notificacao-toast').style.display = 'flex';
+                        setTimeout(fecharToast, 10000);
+                        salvar(d.total);
+                    } else {
+                        salvar(d.total);
+                    }
+                })
+                .catch(function() {});
+        }
+        document.getElementById('notificacao-toast').addEventListener('click', fecharToast);
+        verificar();
+        setInterval(verificar, 30000);
+    })();
     </script>
     {% endif %}
 </body>

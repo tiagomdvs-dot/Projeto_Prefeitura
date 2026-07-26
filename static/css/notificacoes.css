@@ -34,8 +34,10 @@
     background: #f8faff;
 }
 
-.notificacao-conteudo {
+.notificacao-link {
     flex: 1;
+    text-decoration: none;
+    color: inherit;
 }
 
 .notificacao-conteudo p {
@@ -49,6 +51,12 @@
     color: var(--cor-texto-claro);
 }
 
+.notificacao-acoes {
+    flex-shrink: 0;
+    display: flex;
+    align-items: flex-start;
+}
+
 .btn-marcar-lida {
     color: var(--cor-secundaria);
     text-decoration: none;
@@ -58,6 +66,7 @@
     padding: 8px 12px;
     border-radius: 8px;
     transition: var(--transicao);
+    display: inline-block;
 }
 
 .btn-marcar-lida:hover {

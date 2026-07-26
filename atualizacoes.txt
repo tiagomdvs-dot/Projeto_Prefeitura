@@ -149,3 +149,29 @@ Implementações realizadas:
 - Toast flutuante no canto inferior direito aparece quando chega nova notificação (com fade out após 8s)
 - Polling a cada 30 segundos via JS no base.html (apenas para cidadãos logados, não funcionários)
 - Toast estilizado com borda azul, sombra e animação slideUp
+
+25/07/2026 - Fix: nav de autenticação aparecendo em páginas públicas
+
+Implementações realizadas:
+- Adicionado filtro `request.endpoint not in (...)` no base.html para esconder nav, logo e footer de autenticação nas páginas de login, cadastro e esqueci senha
+- Remove __pycache__ do tracking do git
+
+25/07/2026 - Fix: marcar notificação como lida não funcionava
+
+Implementações realizadas:
+- Corrigido conflito de eventos ao clicar em "Marcar como lida" (elemento <span> com onclick dentro de <a>)
+- Card de notificação alterado de <a> para <div>
+- Conteúdo e ação separados em elementos independentes (notificacao-link e notificacao-acoes)
+- "Marcar como lida" convertido de <span>+onclick para <a> com href direto
+- Import do db movido para o topo do arquivo (removido import local dentro da função)
+- Adicionada mensagem flash de confirmação ao marcar como lida
+
+25/07/2026 - Melhoria: toast de nova notificação com sessionStorage
+
+Implementações realizadas:
+- Toast de notificação agora usa sessionStorage para persistir o contador entre navegações de página
+- Na primeira carga da sessão, apenas salva o total (sem exibir toast para notificações já existentes)
+- Toast só aparece quando o total de não lidas AUMENTA (nova notificação de verdade)
+- Chamada imediata a verificar() ao carregar a página (antes esperava 30s)
+- Toast agora fecha ao clicar em qualquer lugar do card (não só no botão ×)
+- Tempo de exibição aumentado de 8s para 10s

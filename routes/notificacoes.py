@@ -1,6 +1,6 @@
-from flask import Blueprint, render_template, jsonify, redirect, url_for
+from flask import Blueprint, render_template, jsonify, redirect, url_for, flash
 from flask_login import login_required, current_user
-from models import Notificacao
+from models import Notificacao, db
 
 notificacoes_bp = Blueprint('notificacoes', __name__)
 
@@ -26,6 +26,6 @@ def marcar_lida(notificacao_id):
     notificacao = Notificacao.query.get_or_404(notificacao_id)
     if notificacao.cidadao_id == current_user.id:
         notificacao.lida = True
-        from models import db
         db.session.commit()
+        flash('Notificação marcada como lida', 'sucesso')
     return redirect(url_for('notificacoes.listar_notificacoes'))
