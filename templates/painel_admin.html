@@ -71,6 +71,7 @@
                                 <th>Abertas</th>
                                 <th>Em Andamento</th>
                                 <th>Concluídas</th>
+                                <th>Canceladas</th>
                                 <th>Atendidas</th>
                                 <th>Média</th>
                             </tr>
@@ -83,6 +84,7 @@
                                     <td><span class="status-badge status-aberta">{{ s.abertas }}</span></td>
                                     <td><span class="status-badge status-andamento">{{ s.andamento }}</span></td>
                                     <td><span class="status-badge status-concluida">{{ s.concluidas }}</span></td>
+                                    <td><span class="status-badge status-cancelada">{{ s.canceladas }}</span></td>
                                     <td>{{ s.atendidas }}</td>
                                     <td>{% if s.media_nota %}{{ s.media_nota }} ★{% else %}—{% endif %}</td>
                                 </tr>

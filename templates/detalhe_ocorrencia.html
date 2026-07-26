@@ -15,7 +15,11 @@
             <p><strong>Bairro:</strong> {{ ocorrencia.bairro }}</p>
             <p><strong>Data de abertura:</strong> {{ ocorrencia.data_abertura.strftime('%d/%m/%Y %H:%M') }}</p>
             {% if ocorrencia.data_conclusao %}
+                {% if ocorrencia.status == 'cancelada' %}
+                <p><strong>Cancelado em:</strong> {{ ocorrencia.data_conclusao.strftime('%d/%m/%Y %H:%M') }}</p>
+            {% else %}
                 <p><strong>Concluído em:</strong> {{ ocorrencia.data_conclusao.strftime('%d/%m/%Y %H:%M') }}</p>
+            {% endif %}
             {% endif %}
         </div>
         <div class="detalhe-descricao">

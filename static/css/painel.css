@@ -297,6 +297,11 @@
     color: #065f46;
 }
 
+.status-cancelada {
+    background: #fef2f2;
+    color: #991b1b;
+}
+
 .btn-exportar {
     display: inline-flex;
     align-items: center;

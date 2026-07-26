@@ -276,6 +276,16 @@ body {
     background: #10b981;
 }
 
+.status-cancelada {
+    background: #fef2f2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+.status-cancelada::before {
+    background: #ef4444;
+}
+
 @keyframes slideDown {
     from {
         opacity: 0;

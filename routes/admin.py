@@ -68,6 +68,7 @@ def painel_admin():
         abertas = q.filter(Ocorrencia.status == 'aberta').count()
         andamento = q.filter(Ocorrencia.status == 'em_andamento').count()
         concluidas = q.filter(Ocorrencia.status == 'concluida').count()
+        canceladas = q.filter(Ocorrencia.status == 'cancelada').count()
         ids = [r[0] for r in q.with_entities(Ocorrencia.id).all()]
         atendidas = AtualizacaoOcorrencia.query.filter(AtualizacaoOcorrencia.ocorrencia_id.in_(ids)).distinct(AtualizacaoOcorrencia.ocorrencia_id).count() if ids else 0
         media_nota = db.session.query(func.avg(Avaliacao.nota)).filter(Avaliacao.ocorrencia_id.in_(ids)).scalar() if ids else None
@@ -77,6 +78,7 @@ def painel_admin():
             'abertas': abertas,
             'andamento': andamento,
             'concluidas': concluidas,
+            'canceladas': canceladas,
             'atendidas': atendidas,
             'media_nota': round(media_nota, 1) if media_nota else None
         })

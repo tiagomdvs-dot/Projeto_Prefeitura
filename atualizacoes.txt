@@ -175,3 +175,16 @@ Implementações realizadas:
 - Chamada imediata a verificar() ao carregar a página (antes esperava 30s)
 - Toast agora fecha ao clicar em qualquer lugar do card (não só no botão ×)
 - Tempo de exibição aumentado de 8s para 10s
+
+25/07/2026 - feat: status "Cancelada" para ocorrências
+
+Implementações realizadas:
+- Adicionado 'cancelada' como status válido em routes/funcionarios.py (atender_ocorrencia)
+- Adicionado 'cancelada' no dicionário status_label para notificação ao cidadão
+- data_conclusao agora é definida também para canceladas (não só concluídas)
+- Filtro "Canceladas" adicionado no painel do funcionário
+- Opção "Cancelada" adicionada no select de status do formulário de atendimento
+- Coluna "Canceladas" adicionada no Resumo por Setor do painel admin
+- CSS: .status-cancelada (fundo vermelho) em estilo_global.css e painel.css
+- Template detalhe_ocorrencia.html: exibe "Cancelado em:" quando status é cancelada
+- Teste funcional testar_cancelamento_ocorrencia adicionado

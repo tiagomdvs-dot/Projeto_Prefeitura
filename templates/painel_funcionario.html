@@ -10,6 +10,7 @@
             <a href="{{ url_for('funcionarios.painel_funcionario', status='aberta', busca=busca) }}" class="filtro-status-btn {% if status_filtro == 'aberta' %}ativo{% endif %}">Abertas</a>
             <a href="{{ url_for('funcionarios.painel_funcionario', status='em_andamento', busca=busca) }}" class="filtro-status-btn {% if status_filtro == 'em_andamento' %}ativo{% endif %}">Em Andamento</a>
             <a href="{{ url_for('funcionarios.painel_funcionario', status='concluida', busca=busca) }}" class="filtro-status-btn {% if status_filtro == 'concluida' %}ativo{% endif %}">Concluídas</a>
+            <a href="{{ url_for('funcionarios.painel_funcionario', status='cancelada', busca=busca) }}" class="filtro-status-btn {% if status_filtro == 'cancelada' %}ativo{% endif %}">Canceladas</a>
         </div>
     </div>
     <form method="GET" action="{{ url_for('funcionarios.painel_funcionario') }}" class="form form-filtro">

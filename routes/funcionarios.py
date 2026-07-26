@@ -62,13 +62,13 @@ def atender_ocorrencia(ocorrencia_id):
         )
         db.session.add(atualizacao)
 
-        if novo_status and novo_status in ('aberta', 'em_andamento', 'concluida'):
+        if novo_status and novo_status in ('aberta', 'em_andamento', 'concluida', 'cancelada'):
             ocorrencia.status = novo_status
-            if novo_status == 'concluida':
+            if novo_status in ('concluida', 'cancelada'):
                 ocorrencia.data_conclusao = datetime.utcnow()
 
         if notificar and ocorrencia.cidadao_id:
-            status_label = {'aberta': 'Aberta', 'em_andamento': 'Em andamento', 'concluida': 'Concluída'}
+            status_label = {'aberta': 'Aberta', 'em_andamento': 'Em andamento', 'concluida': 'Concluída', 'cancelada': 'Cancelada'}
             label = status_label.get(novo_status, ocorrencia.status)
             notificacao = Notificacao(
                 cidadao_id=ocorrencia.cidadao_id,

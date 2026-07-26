@@ -161,6 +161,24 @@ def testar_atendimento_com_equipe():
         log_teste('Atendimento historico presente', False, 'Nenhuma ocorrência disponível')
 
 
+def testar_cancelamento_ocorrencia():
+    s = requests.Session()
+    s.post(f'{BASE_URL}/login/institucional', data={'email': 'admin@picos.pi.gov.br', 'senha': 'admin123'})
+    r = s.get(f'{BASE_URL}/funcionario/painel')
+    import re
+    match = re.search(r'/funcionario/ocorrencias/(\d+)/atender', r.text)
+    if match:
+        ocorrencia_id = match.group(1)
+        r_post = s.post(f'{BASE_URL}/funcionario/ocorrencias/{ocorrencia_id}/atender', data={
+            'observacao': 'Cancelamento automatizado',
+            'status': 'cancelada',
+            'equipe': ''
+        })
+        log_teste('Cancelamento ocorrencia', r_post.status_code in (200, 302))
+    else:
+        log_teste('Cancelamento ocorrencia', False, 'Nenhuma ocorrência disponível')
+
+
 if __name__ == '__main__':
     print('=== Testes Funcionais - Sistema Prefeitura ===')
     print()
@@ -178,6 +196,7 @@ if __name__ == '__main__':
     testar_api_notificacoes()
     testar_cadastro_funcionario()
     testar_atendimento_com_equipe()
+    testar_cancelamento_ocorrencia()
     testar_cpf_valido()
     testar_email_institucional()
     testar_geracao_protocolo()

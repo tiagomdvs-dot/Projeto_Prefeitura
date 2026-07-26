@@ -53,6 +53,7 @@
                         <option value="aberta" {% if ocorrencia.status == 'aberta' %}selected{% endif %}>Aberta</option>
                         <option value="em_andamento" {% if ocorrencia.status == 'em_andamento' %}selected{% endif %}>Em andamento</option>
                         <option value="concluida" {% if ocorrencia.status == 'concluida' %}selected{% endif %}>Concluída</option>
+                        <option value="cancelada" {% if ocorrencia.status == 'cancelada' %}selected{% endif %}>Cancelada</option>
                     </select>
                 </div>
                 <div class="campo">
